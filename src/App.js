@@ -404,6 +404,391 @@ const TREE_CHALLENGES = {
   ],
 };
 
+// ─── Roadmaps ─────────────────────────────────────────────────────────────────
+const ROADMAPS = {
+  python: {
+    id: "python",
+    title: "Python Mastery",
+    icon: "🐍",
+    color: "#3776ab",
+    description: "30 days from zero to building real shit with Python",
+    days: [
+      { day: 1, tasks: ["Install Python and VS Code, run 'Hello World'", "Learn variables and data types - write 10 examples", "Solve 3 basic math problems using Python"] },
+      { day: 2, tasks: ["Master if/else statements - write 5 different conditions", "Build a basic calculator (+, -, *, /)", "Learn input() and print() - build a conversation bot"] },
+      { day: 3, tasks: ["Learn for loops - iterate through 5 different ranges", "Build FizzBuzz (print 1-100, 'Fizz' for 3s, 'Buzz' for 5s)", "Create a multiplication table generator"] },
+      { day: 4, tasks: ["Learn while loops - build a guessing game", "Understand break and continue with examples", "Build a menu-driven program with loops"] },
+      { day: 5, tasks: ["Master Python lists - create, append, remove, slice", "Build a shopping list program", "Sort and filter a list of numbers"] },
+      { day: 6, tasks: ["Learn dictionaries - create 3 different dict examples", "Build a phonebook app (add, search, delete contacts)", "Understand dict methods - keys(), values(), items()"] },
+      { day: 7, tasks: ["Learn tuples and sets - understand when to use each", "Build a program that removes duplicates from a list", "Practice nested data structures (list of dicts)"] },
+      { day: 8, tasks: ["Write your first function with parameters and return", "Build 5 reusable functions (calculator operations)", "Understand function scope - global vs local"] },
+      { day: 9, tasks: ["Learn *args and **kwargs", "Build a function that takes unlimited arguments", "Write a decorator function (learn what they do)"] },
+      { day: 10, tasks: ["Master list comprehensions - rewrite 3 for loops", "Learn dictionary comprehensions", "Build a data transformer using comprehensions"] },
+      { day: 11, tasks: ["Read and write files - save data to .txt", "Build a note-taking app that persists data", "Parse a text file and extract specific data"] },
+      { day: 12, tasks: ["Learn try/except for error handling", "Build a program that handles user input errors gracefully", "Understand different exception types"] },
+      { day: 13, tasks: ["Install and use pip - install your first package", "Work with the 'requests' library - fetch data from an API", "Parse JSON data and display it nicely"] },
+      { day: 14, tasks: ["Learn string methods - split, join, replace, strip", "Build a text analyzer (word count, char count)", "Create a simple cipher to encode/decode messages"] },
+      { day: 15, tasks: ["Introduction to NumPy - install and import", "Create arrays and understand array operations", "Perform math operations on arrays (faster than lists)"] },
+      { day: 16, tasks: ["Learn Pandas basics - create a DataFrame", "Read a CSV file and display first 10 rows", "Filter and sort data in Pandas"] },
+      { day: 17, tasks: ["Pandas operations - groupby, merge, pivot", "Clean messy data (handle missing values)", "Calculate statistics on real dataset"] },
+      { day: 18, tasks: ["Learn classes and objects - create your first class", "Build a Person class with attributes and methods", "Understand __init__ and self"] },
+      { day: 19, tasks: ["Inheritance - create parent and child classes", "Override methods in child class", "Build a simple game character system with classes"] },
+      { day: 20, tasks: ["Build a complete project: Task Manager CLI", "Use classes, file I/O, and error handling", "Add features: add task, complete task, list tasks"] },
+      { day: 21, tasks: ["Introduction to web scraping with BeautifulSoup", "Scrape a simple website and extract text", "Parse HTML and find specific elements"] },
+      { day: 22, tasks: ["Build a web scraper that collects real data", "Save scraped data to CSV file", "Handle scraping errors and edge cases"] },
+      { day: 23, tasks: ["Learn Matplotlib for data visualization", "Create line plot, bar chart, and scatter plot", "Customize colors, labels, and titles"] },
+      { day: 24, tasks: ["Visualize real data from CSV", "Create subplots with multiple charts", "Save plots as image files"] },
+      { day: 25, tasks: ["Work with APIs - understand GET requests", "Build a weather app using a public API", "Parse and display API response data"] },
+      { day: 26, tasks: ["Learn regular expressions (regex) basics", "Extract patterns from text (emails, phone numbers)", "Build a data validator using regex"] },
+      { day: 27, tasks: ["Plan your final project - pick something you want", "Set up project structure and files", "Write pseudocode for main features"] },
+      { day: 28, tasks: ["Build core functionality of your project", "Implement at least 2 major features", "Test and fix bugs as you go"] },
+      { day: 29, tasks: ["Add final features and polish your project", "Write comments and documentation", "Handle edge cases and errors"] },
+      { day: 30, tasks: ["Finish and test your complete project", "Push to GitHub (learn git basics if needed)", "Share your project and celebrate"] }
+    ]
+  },
+  ai: {
+    id: "ai",
+    title: "AI Engineering",
+    icon: "🤖",
+    color: "#ff6b6b",
+    description: "30 days to understand and build with AI models",
+    days: [
+      { day: 1, tasks: ["Watch 3Blue1Brown 'What is a neural network?'", "Install Python, PyTorch, and Jupyter", "Run your first neural network (any tutorial)"] },
+      { day: 2, tasks: ["Understand tensors and basic operations", "Create and manipulate tensors in PyTorch", "Learn matrix multiplication for neural networks"] },
+      { day: 3, tasks: ["Learn what backpropagation actually does", "Implement gradient descent by hand (simple function)", "Understand loss functions conceptually"] },
+      { day: 4, tasks: ["Build a neural network from scratch (no libraries)", "Train it on XOR problem", "Understand forward and backward pass"] },
+      { day: 5, tasks: ["Load MNIST dataset", "Build your first CNN in PyTorch", "Train it and get >90% accuracy"] },
+      { day: 6, tasks: ["Learn about overfitting and underfitting", "Implement dropout and regularization", "Plot training vs validation loss"] },
+      { day: 7, tasks: ["Understand convolutional layers deeply", "Visualize what conv layers learn", "Experiment with different kernel sizes"] },
+      { day: 8, tasks: ["Learn data augmentation techniques", "Apply augmentation to image dataset", "See how it improves model performance"] },
+      { day: 9, tasks: ["Build an image classifier for custom dataset", "Collect your own images (10 classes minimum)", "Train and evaluate the model"] },
+      { day: 10, tasks: ["Learn transfer learning concept", "Use pre-trained ResNet or VGG", "Fine-tune it on your custom dataset"] },
+      { day: 11, tasks: ["Read 'Attention Is All You Need' paper (at least intro)", "Understand self-attention mechanism", "Draw out attention calculations by hand"] },
+      { day: 12, tasks: ["Learn about transformer architecture", "Understand encoder and decoder", "Code a simple attention layer from scratch"] },
+      { day: 13, tasks: ["Install Hugging Face transformers library", "Load a pre-trained BERT model", "Run inference on sample text"] },
+      { day: 14, tasks: ["Fine-tune a text classifier using BERT", "Use your own dataset (reviews, tweets, etc)", "Evaluate performance on test set"] },
+      { day: 15, tasks: ["Learn about embeddings and vector spaces", "Visualize word embeddings (Word2Vec or GloVe)", "Find similar words using cosine similarity"] },
+      { day: 16, tasks: ["Build a simple sentiment analyzer", "Use pre-trained model from Hugging Face", "Test it on real-world text"] },
+      { day: 17, tasks: ["Understand tokenization deeply", "Compare different tokenizers (BPE, WordPiece)", "Build your own simple tokenizer"] },
+      { day: 18, tasks: ["Learn what RAG (Retrieval Augmented Generation) is", "Understand vector databases concept", "Install and test ChromaDB or FAISS"] },
+      { day: 19, tasks: ["Build a simple RAG pipeline", "Embed documents and store in vector DB", "Query and retrieve relevant chunks"] },
+      { day: 20, tasks: ["Integrate RAG with LLM (OpenAI API or local model)", "Build Q&A system over your documents", "Test with real questions"] },
+      { day: 21, tasks: ["Learn about prompt engineering", "Test different prompting strategies", "Build a prompt template system"] },
+      { day: 22, tasks: ["Understand few-shot learning", "Create examples for in-context learning", "Compare zero-shot vs few-shot performance"] },
+      { day: 23, tasks: ["Learn model evaluation metrics", "Calculate precision, recall, F1 score", "Understand when to use each metric"] },
+      { day: 24, tasks: ["Deploy a model as REST API using FastAPI", "Create endpoints for inference", "Test with POST requests"] },
+      { day: 25, tasks: ["Learn about model optimization", "Quantize a model to reduce size", "Compare speed and accuracy tradeoffs"] },
+      { day: 26, tasks: ["Understand LLM limitations and hallucinations", "Build validation layer for outputs", "Implement fact-checking mechanism"] },
+      { day: 27, tasks: ["Plan your final AI project", "Choose: chatbot, image gen, RAG app, or classifier", "Set up project structure"] },
+      { day: 28, tasks: ["Build core AI functionality", "Integrate model with application logic", "Handle errors and edge cases"] },
+      { day: 29, tasks: ["Add UI or API layer", "Test with real users or data", "Optimize performance"] },
+      { day: 30, tasks: ["Deploy your AI application", "Write documentation", "Share on GitHub or Twitter"] }
+    ]
+  },
+  fitness: {
+    id: "fitness",
+    title: "Beast Mode",
+    icon: "💪",
+    color: "#ff2d55",
+    description: "30 days to transform your body and mind",
+    days: [
+      { day: 1, tasks: ["20 min walk or jog", "50 push-ups (break into sets)", "100 bodyweight squats"] },
+      { day: 2, tasks: ["30 min cardio (run, bike, or swim)", "3 sets of 20 push-ups", "Plank hold: 3x1 min"] },
+      { day: 3, tasks: ["Rest day - 20 min stretching or yoga", "Foam rolling", "Plan next week's workouts"] },
+      { day: 4, tasks: ["40 min run or cardio", "100 push-ups total", "50 lunges each leg"] },
+      { day: 5, tasks: ["Upper body: 5 sets max push-ups", "Pull-ups or rows: 5 sets to failure", "Dips: 3 sets max reps"] },
+      { day: 6, tasks: ["Core day: 5 min plank total", "100 crunches", "50 leg raises"] },
+      { day: 7, tasks: ["Active recovery - light jog 30 min", "Full body stretch 20 min", "Take progress photos"] },
+      { day: 8, tasks: ["Run 5km (or 30 min cardio)", "150 push-ups", "150 squats"] },
+      { day: 9, tasks: ["HIIT: 10 rounds (30s work, 30s rest)", "Burpees, mountain climbers, jump squats", "Core finisher: 200 crunches"] },
+      { day: 10, tasks: ["Upper body strength: push-ups to failure x5", "Pull-ups: 50 total (any sets)", "Pike push-ups: 3x15"] },
+      { day: 11, tasks: ["Lower body: 200 squats", "100 lunges total", "Wall sit: 3x2 min"] },
+      { day: 12, tasks: ["Cardio: 45 min run or bike", "Core: 6 min plank total", "Stretching 15 min"] },
+      { day: 13, tasks: ["Full body circuit: 5 rounds", "20 push-ups, 30 squats, 15 burpees, 1 min plank", "No rest between exercises"] },
+      { day: 14, tasks: ["Rest day - yoga or walking only", "Meal prep for next week", "Review progress and adjust plan"] },
+      { day: 15, tasks: ["Run 7km (or 45 min cardio)", "200 push-ups total", "100 dips"] },
+      { day: 16, tasks: ["Strength: max push-ups in one set", "Then 10 sets of half your max", "Pull-ups: pyramid up and down (1,2,3...3,2,1)"] },
+      { day: 17, tasks: ["Lower body blast: 300 squats", "150 lunges", "100 calf raises"] },
+      { day: 18, tasks: ["HIIT sprints: 15 rounds", "30s all-out sprint, 90s walk", "Core burnout: planks until failure"] },
+      { day: 19, tasks: ["Upper body: bench dips 5x20", "Diamond push-ups: 5x15", "Wide push-ups: 5x15"] },
+      { day: 20, tasks: ["Long cardio: 60 min steady pace", "Light core work", "Full body stretch"] },
+      { day: 21, tasks: ["Active rest - 30 min walk", "Mobility work", "Plan final week push"] },
+      { day: 22, tasks: ["Test day: max push-ups in 2 min", "Max pull-ups", "Plank hold for max time"] },
+      { day: 23, tasks: ["Full body: 500 reps total", "Mix of push-ups, squats, lunges, dips", "Track your time"] },
+      { day: 24, tasks: ["Run 10km (or 60 min cardio)", "Core: 300 total reps (mix exercises)", "Stretch thoroughly"] },
+      { day: 25, tasks: ["Strength endurance: 10 rounds", "15 push-ups, 20 squats, 10 burpees", "Rest only when needed"] },
+      { day: 26, tasks: ["Upper body max effort", "Push-ups: 250 total", "Pull-ups: 100 total"] },
+      { day: 27, tasks: ["Lower body max effort", "400 squats", "200 lunges"] },
+      { day: 28, tasks: ["Final cardio push: run until exhausted", "Then walk for recovery", "Core work: 10 min plank total"] },
+      { day: 29, tasks: ["Full body circuit: go until failure", "Track all your maxes", "Push beyond your limits"] },
+      { day: 30, tasks: ["Final test: beat all your day 1 numbers", "Take final progress photos", "Celebrate your transformation"] }
+    ]
+  },
+  entrepreneur: {
+    id: "entrepreneur",
+    title: "Build & Ship",
+    icon: "🚀",
+    color: "#ffd60a",
+    description: "30 days to launch something real",
+    days: [
+      { day: 1, tasks: ["Write down 20 problems you've personally experienced", "Circle the 3 that frustrate you most", "Research: who else has this problem?"] },
+      { day: 2, tasks: ["Pick ONE problem to solve", "Talk to 5 people who have this problem", "Validate it's actually painful enough"] },
+      { day: 3, tasks: ["Research existing solutions", "Identify what they're missing", "Find your unique angle"] },
+      { day: 4, tasks: ["Define your MVP - absolute minimum to test idea", "Write down 3 core features (max)", "Sketch rough wireframes"] },
+      { day: 5, tasks: ["Choose your tech stack", "Set up development environment", "Build 'hello world' version"] },
+      { day: 6, tasks: ["Build first core feature", "Make it barely functional", "Show it to 1 person and get feedback"] },
+      { day: 7, tasks: ["Implement feedback from yesterday", "Build second core feature", "Test both features together"] },
+      { day: 8, tasks: ["Polish the UI just enough to not be embarrassing", "Fix critical bugs", "Get 3 people to test it"] },
+      { day: 9, tasks: ["Build third core feature", "Connect all features into flow", "Test end-to-end user journey"] },
+      { day: 10, tasks: ["Set up basic landing page", "Write clear value proposition", "Add waitlist or sign-up form"] },
+      { day: 11, tasks: ["Create social media accounts", "Post about what you're building", "Join 3 relevant online communities"] },
+      { day: 12, tasks: ["Get 10 people to test your MVP", "Watch them use it (don't help)", "Note every point of confusion"] },
+      { day: 13, tasks: ["Fix the 3 biggest issues from testing", "Improve onboarding flow", "Add basic error handling"] },
+      { day: 14, tasks: ["Build in public - share progress update", "Post screenshots or demo video", "Ask for honest feedback"] },
+      { day: 15, tasks: ["Add one feature users asked for most", "Test it thoroughly", "Prepare for wider launch"] },
+      { day: 16, tasks: ["Write launch post for Product Hunt/Twitter", "Create demo video or screenshots", "Prepare FAQ for common questions"] },
+      { day: 17, tasks: ["Soft launch to friends and small communities", "Get 20 people using it", "Monitor for bugs and feedback"] },
+      { day: 18, tasks: ["Fix critical bugs found in soft launch", "Improve performance issues", "Polish rough edges"] },
+      { day: 19, tasks: ["Launch publicly on Product Hunt or Reddit", "Share on all social platforms", "Respond to every comment"] },
+      { day: 20, tasks: ["Push updates based on launch feedback", "Reach out to power users personally", "Thank everyone who supported"] },
+      { day: 21, tasks: ["Analyze what worked in launch", "Double down on best acquisition channel", "Post daily updates for visibility"] },
+      { day: 22, tasks: ["Add analytics to track user behavior", "Identify drop-off points", "Plan improvements based on data"] },
+      { day: 23, tasks: ["Build most-requested feature", "Test with existing users first", "Ship it publicly"] },
+      { day: 24, tasks: ["Start thinking about monetization", "Survey users: would they pay?", "Research pricing models"] },
+      { day: 25, tasks: ["If free: add premium tier or donations", "If paid: set up payment processing", "Test checkout flow thoroughly"] },
+      { day: 26, tasks: ["Content marketing: write blog post or tutorial", "Share on relevant platforms", "Build SEO for long-term growth"] },
+      { day: 27, tasks: ["Reach out to 10 potential users directly", "Get on calls if possible", "Convert them to users"] },
+      { day: 28, tasks: ["Automate what you can (emails, onboarding)", "Set up basic customer support", "Create help docs or FAQ"] },
+      { day: 29, tasks: ["Reflect: what worked, what didn't?", "Plan next 30 days of growth", "Set measurable goals"] },
+      { day: 30, tasks: ["Celebrate shipping something real", "Share your full journey publicly", "Start planning v2 or new project"] }
+    ]
+  },
+  music: {
+    id: "music",
+    title: "Producer Mode",
+    icon: "🎵",
+    color: "#bf5af2",
+    description: "30 days to make music that doesn't suck",
+    days: [
+      { day: 1, tasks: ["Download and install a DAW (FL Studio, Ableton, or Logic)", "Learn the interface - where everything is", "Create your first 4-bar drum pattern"] },
+      { day: 2, tasks: ["Learn basic music theory: major and minor scales", "Create a simple 4-bar melody in C major", "Layer it over your drums from yesterday"] },
+      { day: 3, tasks: ["Understand chord progressions (I-V-vi-IV)", "Create a 4-chord progression", "Add bass notes that follow the chords"] },
+      { day: 4, tasks: ["Explore 5 different synth presets", "Create a melody with your favorite preset", "Learn what ADSR envelope does"] },
+      { day: 5, tasks: ["Recreate the drum pattern from a song you love", "Match the tempo and groove", "Understand what makes it work"] },
+      { day: 6, tasks: ["Learn basic mixing: volume levels", "Balance drums, bass, and melody", "Make sure nothing is too loud or quiet"] },
+      { day: 7, tasks: ["Create a full 8-bar loop (drums + bass + melody)", "Export it and listen outside your DAW", "Note what needs improvement"] },
+      { day: 8, tasks: ["Learn about EQ (equalization)", "Cut muddy frequencies from bass", "Brighten up your melody with high-end boost"] },
+      { day: 9, tasks: ["Add effects: reverb and delay", "Apply reverb to melody for space", "Use delay creatively on a sound"] },
+      { day: 10, tasks: ["Learn song structure: intro, verse, chorus, bridge", "Plan out a 2-minute song structure", "Create variations for each section"] },
+      { day: 11, tasks: ["Build your intro (8 bars)", "Build your verse (16 bars)", "Make them flow together"] },
+      { day: 12, tasks: ["Create a chorus that hits harder than verse", "Add more energy: extra layers or louder drums", "Build tension before chorus drops"] },
+      { day: 13, tasks: ["Learn sidechain compression", "Apply it to bass when kick hits", "Feel the pumping effect"] },
+      { day: 14, tasks: ["Create a breakdown or bridge section", "Strip elements out then build back up", "Add a unique sound for this section"] },
+      { day: 15, tasks: ["Learn panning for stereo width", "Pan hi-hats and percussion left/right", "Keep bass and kick centered"] },
+      { day: 16, tasks: ["Study a reference track in your genre", "Analyze the arrangement and mix", "Note the frequency balance"] },
+      { day: 17, tasks: ["Create a full song arrangement (intro to outro)", "Include all sections: verse, chorus, bridge", "Make it at least 2 minutes"] },
+      { day: 18, tasks: ["Learn automation: volume, filters, effects", "Automate a filter sweep for buildup", "Automate volume for dynamic changes"] },
+      { day: 19, tasks: ["Add vocal samples or vocal chops", "Process them with effects", "Make them fit the vibe"] },
+      { day: 20, tasks: ["Learn about compression", "Compress your drums to punch harder", "Compress melody to sit in the mix"] },
+      { day: 21, tasks: ["Focus on your low-end: kick and bass", "Make sure they don't clash", "Clean up with EQ if needed"] },
+      { day: 22, tasks: ["Add transitions between sections", "Use risers, impacts, sweeps", "Make section changes feel intentional"] },
+      { day: 23, tasks: ["Create an outro that resolves the song", "Fade elements out gradually", "End on a satisfying note"] },
+      { day: 24, tasks: ["Mix your full track", "Balance all levels relative to each other", "Use reference track for comparison"] },
+      { day: 25, tasks: ["Learn basic mastering concepts", "Apply limiter to increase loudness", "Don't destroy your dynamics"] },
+      { day: 26, tasks: ["Export your track in high quality (WAV)", "Listen on different devices (headphones, phone, car)", "Note what needs fixing"] },
+      { day: 27, tasks: ["Make final adjustments based on listening test", "Fix harsh frequencies or weak sections", "Polish until you're satisfied"] },
+      { day: 28, tasks: ["Create basic album art or cover", "Write a track description", "Prepare for upload"] },
+      { day: 29, tasks: ["Upload to SoundCloud or YouTube", "Share with at least 5 people", "Ask for honest feedback"] },
+      { day: 30, tasks: ["Start your next track using what you learned", "Experiment with a different genre or style", "Celebrate finishing your first complete song"] }
+    ]
+  },
+  chess: {
+    id: "chess",
+    title: "Chess Mastery",
+    icon: "♟️",
+    color: "#d4a574",
+    description: "30 days from beginner to competitive chess player",
+    days: [
+      { day: 1, tasks: ["Learn how all pieces move (pawn, knight, bishop, rook, queen, king)", "Play 5 games against computer on easiest level", "Focus on not hanging pieces (leaving them undefended)"] },
+      { day: 2, tasks: ["Learn castling, en passant, and pawn promotion rules", "Practice Scholar's Mate and how to defend against it", "Play 5 games - try to castle every game"] },
+      { day: 3, tasks: ["Learn basic checkmate patterns: back rank mate, 2 rooks mate", "Practice checkmating lone king with queen + king", "Solve 10 checkmate-in-one puzzles"] },
+      { day: 4, tasks: ["Study the 4 opening principles: control center, develop pieces, king safety, connect rooks", "Play 5 games focusing only on these principles", "Review games - did you follow the principles?"] },
+      { day: 5, tasks: ["Learn one opening as white (e4 → Italian Game)", "Learn response as black (e4 e5 defense)", "Play 10 games using only these openings"] },
+      { day: 6, tasks: ["Learn piece values (pawn=1, knight=3, bishop=3, rook=5, queen=9)", "Practice tactical vision: always check if you can win material", "Solve 15 'win material' puzzles"] },
+      { day: 7, tasks: ["Study basic tactics: forks, pins, skewers", "Solve 20 tactical puzzles on chess.com or lichess", "Play 5 games looking for tactical opportunities"] },
+      { day: 8, tasks: ["Learn discovered attacks and double attacks", "Find examples in your previous games", "Solve 20 puzzles focused on these tactics"] },
+      { day: 9, tasks: ["Study removal of defender tactic", "Learn how to create threats that force your opponent to react", "Play 5 games trying to use this tactic"] },
+      { day: 10, tasks: ["Review all tactics learned so far", "Solve 30 mixed tactical puzzles", "Analyze 2 of your losses - where did you miss tactics?"] },
+      { day: 11, tasks: ["Learn basic endgame: king + pawn vs king", "Practice the square rule and opposition", "Play 10 king+pawn endgames against computer"] },
+      { day: 12, tasks: ["Learn rook endgames: Lucena and Philidor positions", "Understand why rook behind passed pawn is strong", "Practice 5 rook endgame positions"] },
+      { day: 13, tasks: ["Study middlegame planning: identify weaknesses", "Learn about pawn structure (isolated, doubled, passed pawns)", "Analyze 3 master games focusing on plans"] },
+      { day: 14, tasks: ["Review week 1+2: play 10 games", "Focus on opening principles AND tactics", "Note your most common mistakes"] },
+      { day: 15, tasks: ["Learn the Sicilian Defense as black", "Understand the key ideas and pawn breaks", "Play 10 games as black using Sicilian"] },
+      { day: 16, tasks: ["Study weak squares and outposts", "Learn how knights dominate on strong squares", "Play 5 games trying to create outposts"] },
+      { day: 17, tasks: ["Learn about piece activity vs material", "Sometimes sacrificing material for active pieces wins", "Solve 15 positional sacrifice puzzles"] },
+      { day: 18, tasks: ["Study attacking the king: identifying weaknesses", "Learn the classic h-pawn storm attack", "Play 5 games going for kingside attacks"] },
+      { day: 19, tasks: ["Learn defensive techniques: prophylaxis", "Understand how to stop your opponent's plans", "Play 5 games focusing on defense"] },
+      { day: 20, tasks: ["Study time management in chess", "Play 10 rapid games (10 min) - practice making good moves quickly", "Review time usage in your games"] },
+      { day: 21, tasks: ["Learn about space advantage", "Study how to play when you have more space", "Play 5 games trying to gain space"] },
+      { day: 22, tasks: ["Study zugzwang and tempo in endgames", "Learn triangulation technique", "Practice complex endgame positions"] },
+      { day: 23, tasks: ["Analyze a full game by a grandmaster (with commentary)", "Note the key moments and plans", "Try to predict moves before seeing them"] },
+      { day: 24, tasks: ["Review all openings learned", "Play 15 games using your opening repertoire", "Note which positions you're comfortable with"] },
+      { day: 25, tasks: ["Study typical middlegame sacrifices", "Learn Greek gift sacrifice (Bxh7+)", "Solve 20 sacrifice puzzles"] },
+      { day: 26, tasks: ["Learn about initiative and maintaining pressure", "Study games where one side keeps attacking", "Play 5 games trying to maintain initiative"] },
+      { day: 27, tasks: ["Practice calculation: calculate 3 moves deep", "Do exercises calculating forced sequences", "Solve 30 puzzles without moving pieces"] },
+      { day: 28, tasks: ["Study your own games: analyze 10 recent games", "Use engine to find your mistakes", "Write down patterns you need to fix"] },
+      { day: 29, tasks: ["Play a long tournament (20+ games in one day)", "Track your rating progress", "Note your mental stamina"] },
+      { day: 30, tasks: ["Final test: play against 1600-rated bots", "Review everything you've learned", "Set goals for next 30 days of improvement"] }
+    ]
+  },
+  quran: {
+    id: "quran",
+    title: "Quran Memorization",
+    icon: "📿",
+    color: "#00b894",
+    description: "1 year to memorize the entire Quran - systematic hifz starting from Juz 30",
+    days: (() => {
+      const days = [];
+      let dayCount = 1;
+      
+      // Juz 30 - Short surahs (Days 1-45, ~7-10 ayat/day)
+      const juz30Surahs = [
+        { name: "An-Nas", ayat: 6 }, { name: "Al-Falaq", ayat: 5 }, { name: "Al-Ikhlas", ayat: 4 },
+        { name: "Al-Masad", ayat: 5 }, { name: "An-Nasr", ayat: 3 }, { name: "Al-Kafirun", ayat: 6 },
+        { name: "Al-Kawthar", ayat: 3 }, { name: "Al-Ma'un", ayat: 7 }, { name: "Quraysh", ayat: 4 },
+        { name: "Al-Fil", ayat: 5 }, { name: "Al-Humazah", ayat: 9 }, { name: "Al-'Asr", ayat: 3 },
+        { name: "At-Takathur", ayat: 8 }, { name: "Al-Qari'ah", ayat: 11 }, { name: "Al-'Adiyat", ayat: 11 },
+        { name: "Az-Zalzalah", ayat: 8 }, { name: "Al-Bayyinah", ayat: 8 }, { name: "Al-Qadr", ayat: 5 },
+        { name: "Al-'Alaq", ayat: 19 }, { name: "At-Tin", ayat: 8 }, { name: "Ash-Sharh", ayat: 8 },
+        { name: "Ad-Duha", ayat: 11 }, { name: "Al-Layl", ayat: 21 }, { name: "Ash-Shams", ayat: 15 },
+        { name: "Al-Balad", ayat: 20 }, { name: "Al-Fajr", ayat: 30 }, { name: "Al-Ghashiyah", ayat: 26 },
+        { name: "Al-A'la", ayat: 19 }, { name: "At-Tariq", ayat: 17 }, { name: "Al-Buruj", ayat: 22 },
+        { name: "Al-Inshiqaq", ayat: 25 }, { name: "Al-Mutaffifin", ayat: 36 }, { name: "Al-Infitar", ayat: 19 },
+        { name: "At-Takwir", ayat: 29 }, { name: "'Abasa", ayat: 42 }, { name: "An-Nazi'at", ayat: 46 },
+        { name: "An-Naba'", ayat: 40 }
+      ];
+      
+      // Days 1-3: Al-Fatiha + first 3 short surahs
+      days.push({ day: dayCount++, tasks: ["Memorize Al-Fatiha after Fajr (repeat 50x)", "Listen to recitation 10 times", "Recite in all 5 daily prayers"] });
+      days.push({ day: dayCount++, tasks: ["Memorize An-Nas (repeat 30x)", "Review Al-Fatiha 20x", "Link both surahs - recite together 10x"] });
+      days.push({ day: dayCount++, tasks: ["Memorize Al-Falaq + Al-Ikhlas", "Review all memorized (Al-Fatiha, An-Nas, Al-Falaq, Al-Ikhlas)", "Recite to someone for correction"] });
+      
+      // Days 4-40: Continue Juz 30 systematically
+      for (let i = 3; i < juz30Surahs.length; i++) {
+        const surah = juz30Surahs[i];
+        const isLonger = surah.ayat > 15;
+        
+        if (isLonger) {
+          // Split longer surahs across 2 days
+          days.push({ 
+            day: dayCount++, 
+            tasks: [
+              `Memorize first half of ${surah.name} (${Math.ceil(surah.ayat/2)} ayat) after Fajr`,
+              "Repeat each ayah 20x before moving to next",
+              "Review last 3 surahs memorized (15 min)"
+            ]
+          });
+          days.push({ 
+            day: dayCount++, 
+            tasks: [
+              `Complete ${surah.name} - second half (${Math.floor(surah.ayat/2)} ayat)`,
+              `Connect full surah - recite ${surah.name} completely 10x`,
+              "Daily muraja'a: Review previous week's memorization"
+            ]
+          });
+        } else {
+          days.push({ 
+            day: dayCount++, 
+            tasks: [
+              `Memorize ${surah.name} (${surah.ayat} ayat) after Fajr`,
+              "Listen to recitation, then repeat each ayah 15x",
+              "Review last 5 surahs memorized + recite new surah in salah"
+            ]
+          });
+        }
+        
+        // Weekly comprehensive review every 7 days
+        if (dayCount % 7 === 0) {
+          days.push({ 
+            day: dayCount++, 
+            tasks: [
+              "NO new memorization - full review day",
+              "Recite everything memorized so far from memory 3x",
+              "Fix any mistakes with teacher/app - strengthen weak surahs"
+            ]
+          });
+        }
+      }
+      
+      // Days 41-60: Juz 29 (longer surahs, ~5-7 ayat/day with strong revision)
+      const juz29Days = 20;
+      for (let i = 0; i < juz29Days; i++) {
+        days.push({
+          day: dayCount++,
+          tasks: [
+            `Memorize 5-7 ayat from Juz 29 after Fajr (use same mushaf)`,
+            "Repeat new ayat 25x - link with yesterday's portion",
+            "Daily muraja'a: Review 2 pages from Juz 30"
+          ]
+        });
+        
+        if (dayCount % 7 === 0) {
+          days.push({ 
+            day: dayCount++, 
+            tasks: [
+              "Full review day - NO new memorization",
+              "Recite Juz 30 completely from memory",
+              "Review current week of Juz 29 - correct mistakes"
+            ]
+          });
+        }
+      }
+      
+      // Days 61-365: Continue pattern through all 30 Juz (working backwards: 29→28→...→1)
+      // Standard pattern: 5-7 ayat new + strong daily/weekly/monthly review
+      while (dayCount <= 365) {
+        const currentJuz = 30 - Math.floor((dayCount - 61) / 12);
+        
+        if (dayCount % 7 === 0) {
+          // Weekly review day
+          days.push({
+            day: dayCount++,
+            tasks: [
+              "NO new memorization - comprehensive review",
+              "Recite all of last completed Juz from memory",
+              "Identify weak sections and strengthen them"
+            ]
+          });
+        } else if (dayCount % 30 === 0) {
+          // Monthly mega-review
+          days.push({
+            day: dayCount++,
+            tasks: [
+              "MONTHLY MURAJAAH - Review everything memorized",
+              "Recite minimum 3 complete Juz from different sections",
+              "Record yourself and listen for mistakes"
+            ]
+          });
+        } else {
+          // Regular memorization day
+          const weekDay = dayCount % 7;
+          days.push({
+            day: dayCount++,
+            tasks: [
+              `Memorize 5-7 new ayat from Juz ${Math.max(1, currentJuz)} after Fajr`,
+              `Repeat each ayah 20-25x aloud - link with yesterday's ayat`,
+              weekDay < 3 
+                ? "Daily muraja'a: Review last 2 days memorization"
+                : "Daily muraja'a: Review full last week + 1 random Juz from completed"
+            ]
+          });
+        }
+      }
+      
+      return days;
+    })()
+  }
+};
+
 function getTreeProgress(treeKey, treeProgress) {
   const tree = SKILL_TREES[treeKey];
   const prog = (treeProgress || {})[treeKey] || {};
@@ -430,6 +815,8 @@ const defaultState = {
   level: 1, exp: 0, totalExp: 0,
   stats: { strength: 10, agility: 10, intelligence: 10, vitality: 10, perception: 10 },
   statPoints: 0,
+  roadmapProgress: {}, // Format: { roadmapId: { day: { taskIndex: true/false } } }
+  customRoadmaps: [], // User-created roadmaps
   skills: [
     { id: 1,  name: "First Steps",         category: "Body",  rank: "E", unlockLevel: 1,  desc: "You exercise at least once this week. The journey begins.", unlocked: true },
     { id: 2,  name: "Morning Ritual",       category: "Mind",  rank: "E", unlockLevel: 1,  desc: "You wake up at a consistent time every day for a week.", unlocked: true },
@@ -1981,6 +2368,27 @@ function reducer(state, action) {
     case "WEEKLY_RESET":
       return { ...state, quests: state.quests.map(q => q.category === "Weekly" ? { ...q, done: false } : q), weeklyResetDate: action.weekStart };
 
+    case "TOGGLE_ROADMAP_TASK": {
+      const { roadmapId, day, taskIndex } = action;
+      const roadmapProg = { ...(state.roadmapProgress || {}) };
+      if (!roadmapProg[roadmapId]) roadmapProg[roadmapId] = {};
+      if (!roadmapProg[roadmapId][day]) roadmapProg[roadmapId][day] = {};
+      roadmapProg[roadmapId][day][taskIndex] = !roadmapProg[roadmapId][day][taskIndex];
+      return { ...state, roadmapProgress: roadmapProg };
+    }
+
+    case "ADD_CUSTOM_ROADMAP": {
+      const customRoadmaps = [...(state.customRoadmaps || []), action.roadmap];
+      return { ...state, customRoadmaps };
+    }
+
+    case "DELETE_CUSTOM_ROADMAP": {
+      const customRoadmaps = (state.customRoadmaps || []).filter(r => r.id !== action.id);
+      const roadmapProgress = { ...state.roadmapProgress };
+      delete roadmapProgress[action.id];
+      return { ...state, customRoadmaps, roadmapProgress };
+    }
+
     case "DAILY_RESET": {
       const today = new Date().toDateString();
       const gap = state.lastActiveDate ? daysBetween(state.lastActiveDate, today) : 0;
@@ -2149,6 +2557,345 @@ function reducer(state, action) {
   }
 }
 
+// ─── Roadmaps Tab ─────────────────────────────────────────────────────────────
+function RoadmapsTab({ state, dispatch }) {
+  const [selectedRoadmap, setSelectedRoadmap] = useState(null);
+  const [isCreatingCustom, setIsCreatingCustom] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [customForm, setCustomForm] = useState({
+    title: "",
+    icon: "🎯",
+    color: "#a78bfa",
+    description: "",
+    numDays: 30,
+    tasksPerDay: 3
+  });
+  const [dayTasks, setDayTasks] = useState({});
+
+  const roadmapProgress = state.roadmapProgress || {};
+  const customRoadmaps = state.customRoadmaps || [];
+  const allRoadmaps = { ...ROADMAPS, ...Object.fromEntries(customRoadmaps.map(r => [r.id, r])) };
+
+  // Scroll listener for scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Delete confirmation modal
+  if (deleteConfirm) {
+    return (
+      <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(2,1,15,0.96)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+        <div style={{ maxWidth: 400, width: "100%", background: "linear-gradient(135deg, rgba(20,10,50,0.98), rgba(8,4,24,0.99))", border: "1px solid rgba(255,69,58,0.4)", borderRadius: 16, padding: 32, boxShadow: "0 0 60px rgba(255,69,58,0.15)" }}>
+          <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 11, letterSpacing: 2, color: "#ff453a", marginBottom: 12 }}>⚠ CONFIRM DELETE</div>
+          <div style={{ fontSize: 15, color: "#e8d5ff", marginBottom: 24, lineHeight: 1.6 }}>
+            Delete this custom roadmap? All progress will be permanently lost.
+          </div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button onClick={() => setDeleteConfirm(null)} style={{ ...G.btn, flex: 1, color: "#cdd6f4", borderColor: "rgba(80,80,120,0.3)" }}>Cancel</button>
+            <button onClick={() => { dispatch({ type: "DELETE_CUSTOM_ROADMAP", id: deleteConfirm }); setDeleteConfirm(null); setSelectedRoadmap(null); }} style={{ ...G.btn, flex: 1, color: "#ff453a", borderColor: "rgba(255,69,58,0.4)", background: "rgba(255,69,58,0.1)", fontWeight: 700 }}>
+              Delete Forever
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Custom roadmap creator
+  if (isCreatingCustom) {
+    const handleCreate = () => {
+      if (!customForm.title.trim()) {
+        alert("Enter a title for your roadmap");
+        return;
+      }
+      
+      const days = Array.from({ length: customForm.numDays }, (_, i) => {
+        const day = i + 1;
+        const tasks = dayTasks[day] || Array(customForm.tasksPerDay).fill("").map((_, idx) => `Task ${idx + 1} for day ${day}`);
+        return { day, tasks };
+      });
+
+      const newRoadmap = {
+        id: `custom_${Date.now()}`,
+        title: customForm.title,
+        icon: customForm.icon,
+        color: customForm.color,
+        description: customForm.description,
+        days,
+        isCustom: true
+      };
+
+      dispatch({ type: "ADD_CUSTOM_ROADMAP", roadmap: newRoadmap });
+      setIsCreatingCustom(false);
+      setCustomForm({ title: "", icon: "🎯", color: "#a78bfa", description: "", numDays: 30, tasksPerDay: 3 });
+      setDayTasks({});
+    };
+
+    return (
+      <>
+        {/* Scroll to top button */}
+        {showScrollTop && (
+          <button 
+            onClick={scrollToTop}
+            style={{
+              position: "fixed",
+              bottom: 24,
+              right: 24,
+              zIndex: 100,
+              width: 48,
+              height: 48,
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #a78bfa, #7864fa)",
+              border: "1px solid rgba(167,139,250,0.4)",
+              color: "#fff",
+              fontSize: 20,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 20px rgba(167,139,250,0.4)",
+              transition: "all 0.3s"
+            }}>
+            ↑
+          </button>
+        )}
+
+        <div style={G.page}>
+        <button onClick={() => setIsCreatingCustom(false)} style={{ ...G.btn, marginBottom: 20, fontSize: 9 }}>← Back</button>
+        
+        <div style={G.card}>
+          <div style={G.sectionTitle}><span>✨</span> Create Custom Roadmap</div>
+          
+          <div style={{ display: "grid", gap: 16, marginTop: 20 }}>
+            <div>
+              <label style={{ display: "block", fontSize: 11, color: "#7a8aaa", marginBottom: 6, fontFamily: "'Orbitron', sans-serif" }}>TITLE</label>
+              <input type="text" value={customForm.title} onChange={e => setCustomForm({ ...customForm, title: e.target.value })} placeholder="My Custom Roadmap" style={{ width: "100%", padding: "10px 14px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(120,100,255,0.3)", borderRadius: 8, color: "#e8d5ff", fontSize: 14, fontFamily: "'Rajdhani', sans-serif" }} />
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div>
+                <label style={{ display: "block", fontSize: 11, color: "#7a8aaa", marginBottom: 6, fontFamily: "'Orbitron', sans-serif" }}>ICON (emoji)</label>
+                <input type="text" value={customForm.icon} onChange={e => setCustomForm({ ...customForm, icon: e.target.value })} maxLength={2} style={{ width: "100%", padding: "10px 14px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(120,100,255,0.3)", borderRadius: 8, color: "#e8d5ff", fontSize: 14, textAlign: "center" }} />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: 11, color: "#7a8aaa", marginBottom: 6, fontFamily: "'Orbitron', sans-serif" }}>COLOR</label>
+                <input type="color" value={customForm.color} onChange={e => setCustomForm({ ...customForm, color: e.target.value })} style={{ width: "100%", height: 42, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(120,100,255,0.3)", borderRadius: 8, cursor: "pointer" }} />
+              </div>
+            </div>
+
+            <div>
+              <label style={{ display: "block", fontSize: 11, color: "#7a8aaa", marginBottom: 6, fontFamily: "'Orbitron', sans-serif" }}>DESCRIPTION</label>
+              <input type="text" value={customForm.description} onChange={e => setCustomForm({ ...customForm, description: e.target.value })} placeholder="What will you achieve in this roadmap?" style={{ width: "100%", padding: "10px 14px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(120,100,255,0.3)", borderRadius: 8, color: "#e8d5ff", fontSize: 14, fontFamily: "'Rajdhani', sans-serif" }} />
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div>
+                <label style={{ display: "block", fontSize: 11, color: "#7a8aaa", marginBottom: 6, fontFamily: "'Orbitron', sans-serif" }}>DAYS</label>
+                <input type="number" value={customForm.numDays} onChange={e => setCustomForm({ ...customForm, numDays: Math.max(1, Math.min(365, parseInt(e.target.value) || 30)) })} min="1" max="365" style={{ width: "100%", padding: "10px 14px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(120,100,255,0.3)", borderRadius: 8, color: "#e8d5ff", fontSize: 14, fontFamily: "'Rajdhani', sans-serif" }} />
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: 11, color: "#7a8aaa", marginBottom: 6, fontFamily: "'Orbitron', sans-serif" }}>TASKS PER DAY</label>
+                <input type="number" value={customForm.tasksPerDay} onChange={e => setCustomForm({ ...customForm, tasksPerDay: Math.max(1, Math.min(10, parseInt(e.target.value) || 3)) })} min="1" max="10" style={{ width: "100%", padding: "10px 14px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(120,100,255,0.3)", borderRadius: 8, color: "#e8d5ff", fontSize: 14, fontFamily: "'Rajdhani', sans-serif" }} />
+              </div>
+            </div>
+
+            <div style={{ padding: "12px 16px", background: "rgba(120,100,255,0.08)", border: "1px solid rgba(120,100,255,0.2)", borderRadius: 8, fontSize: 12, color: "#7a8aaa", lineHeight: 1.6 }}>
+              💡 After creating, you can customize individual day tasks by editing them directly. For now, we'll generate placeholder tasks that you can modify.
+            </div>
+
+            <button onClick={handleCreate} style={{ ...G.btnSuccess, padding: "14px 24px", fontSize: 14, fontWeight: 700 }}>
+              Create Roadmap
+            </button>
+          </div>
+        </div>
+      </div>
+      </>
+    );
+  }
+
+  if (selectedRoadmap) {
+    const roadmap = allRoadmaps[selectedRoadmap];
+    if (!roadmap) {
+      setSelectedRoadmap(null);
+      return null;
+    }
+    
+    const progress = roadmapProgress[selectedRoadmap] || {};
+    const totalTasks = roadmap.days.length * (roadmap.days[0]?.tasks.length || 3);
+    const completedTasks = Object.values(progress).reduce((sum, day) => sum + Object.values(day).filter(Boolean).length, 0);
+    const completionPct = Math.round((completedTasks / totalTasks) * 100);
+
+    return (
+      <>
+        {/* Scroll to top button */}
+        {showScrollTop && (
+          <button 
+            onClick={scrollToTop}
+            style={{
+              position: "fixed",
+              bottom: 24,
+              right: 24,
+              zIndex: 100,
+              width: 48,
+              height: 48,
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #a78bfa, #7864fa)",
+              border: "1px solid rgba(167,139,250,0.4)",
+              color: "#fff",
+              fontSize: 20,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 20px rgba(167,139,250,0.4)",
+              transition: "all 0.3s"
+            }}>
+            ↑
+          </button>
+        )}
+
+        <div style={G.page}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
+          <button onClick={() => setSelectedRoadmap(null)} style={{ ...G.btn, fontSize: 9 }}>← Back to Roadmaps</button>
+          {roadmap.isCustom && (
+            <button onClick={() => setDeleteConfirm(selectedRoadmap)} style={{ ...G.btn, fontSize: 9, color: "#ff453a", borderColor: "rgba(255,69,58,0.3)" }}>
+              Delete Roadmap
+            </button>
+          )}
+        </div>
+        
+        <div style={{ ...G.card, background: `linear-gradient(135deg, ${roadmap.color}0d, rgba(10,5,30,0.95))`, border: `1px solid ${roadmap.color}33`, marginBottom: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 12 }}>
+            <span style={{ fontSize: 42 }}>{roadmap.icon}</span>
+            <div>
+              <div style={{ fontFamily: "'Cinzel', serif", fontSize: 24, color: roadmap.color, fontWeight: 700 }}>{roadmap.title}</div>
+              <div style={{ fontSize: 13, color: "#7a8aaa", marginTop: 4 }}>{roadmap.description}</div>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 20, marginTop: 16 }}>
+            <div>
+              <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#4a4a70", letterSpacing: 1 }}>PROGRESS</div>
+              <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 18, color: roadmap.color, fontWeight: 700 }}>{completionPct}%</div>
+            </div>
+            <div>
+              <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#4a4a70", letterSpacing: 1 }}>COMPLETED</div>
+              <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 18, color: "#cdd6f4", fontWeight: 700 }}>{completedTasks}/{totalTasks}</div>
+            </div>
+          </div>
+          <div style={{ height: 6, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "hidden", marginTop: 16 }}>
+            <div style={{ height: "100%", width: completionPct + "%", background: `linear-gradient(90deg, ${roadmap.color}, ${roadmap.color}88)`, borderRadius: 999, boxShadow: `0 0 12px ${roadmap.color}66`, transition: "width 0.4s" }} />
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gap: 16 }}>
+          {roadmap.days.map((day, dayIdx) => {
+            const dayProgress = progress[day.day] || {};
+            const dayComplete = day.tasks.every((_, taskIdx) => dayProgress[taskIdx]);
+            const tasksCompleted = day.tasks.filter((_, taskIdx) => dayProgress[taskIdx]).length;
+            
+            return (
+              <div key={day.day} style={{ background: dayComplete ? "rgba(48,209,88,0.08)" : "rgba(10,8,30,0.75)", border: `1px solid ${dayComplete ? "rgba(48,209,88,0.25)" : roadmap.color}28`, borderRadius: 12, padding: 20, position: "relative", overflow: "hidden" }}>
+                {dayComplete && <div style={{ position: "absolute", top: 12, right: 12, fontSize: 24, opacity: 0.3 }}>✓</div>}
+                
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: "50%", background: dayComplete ? "rgba(48,209,88,0.2)" : `${roadmap.color}15`, border: `2px solid ${dayComplete ? "#30d158" : roadmap.color}`, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Orbitron', sans-serif", fontSize: 12, color: dayComplete ? "#30d158" : roadmap.color, fontWeight: 700 }}>
+                    {day.day}
+                  </div>
+                  <div>
+                    <div style={{ fontFamily: "'Cinzel', serif", fontSize: 16, color: dayComplete ? "#30d158" : "#e8d5ff", fontWeight: 600 }}>Day {day.day}</div>
+                    <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#4a4a70", letterSpacing: 1 }}>{tasksCompleted}/{day.tasks.length} TASKS COMPLETE</div>
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gap: 10 }}>
+                  {day.tasks.map((task, taskIdx) => {
+                    const isDone = dayProgress[taskIdx];
+                    return (
+                      <div key={taskIdx} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 12px", borderRadius: 8, background: isDone ? "rgba(48,209,88,0.08)" : "rgba(255,255,255,0.02)", border: `1px solid ${isDone ? "rgba(48,209,88,0.2)" : "rgba(60,60,90,0.3)"}`, cursor: "pointer", transition: "all 0.2s" }} onClick={() => dispatch({ type: "TOGGLE_ROADMAP_TASK", roadmapId: selectedRoadmap, day: day.day, taskIndex: taskIdx })}>
+                        <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${isDone ? "#30d158" : roadmap.color}44`, background: isDone ? "#30d158" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
+                          {isDone && <span style={{ fontSize: 12, color: "#05050f" }}>✓</span>}
+                        </div>
+                        <div style={{ fontSize: 13, color: isDone ? "#30d158" : "#cdd6f4", lineHeight: 1.5, textDecoration: isDone ? "line-through" : "none", flex: 1 }}>{task}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      </>
+    );
+  }
+
+  // Main roadmaps selection view
+  return (
+    <div style={G.page}>
+      <div style={G.card}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div style={G.sectionTitle}><span>🗺</span> Choose Your Path</div>
+          <button onClick={() => setIsCreatingCustom(true)} style={{ ...G.btnSuccess, padding: "8px 16px", fontSize: 10 }}>
+            + Create Custom
+          </button>
+        </div>
+        <div style={{ fontSize: 13, color: "#7a8aaa", marginBottom: 24, lineHeight: 1.6 }}>
+          Each roadmap is a structured path with daily tasks. Pick one and commit, or create your own custom roadmap.
+        </div>
+
+        <div style={{ display: "grid", gap: 16 }}>
+          {Object.values(allRoadmaps).map(roadmap => {
+            const progress = roadmapProgress[roadmap.id] || {};
+            const totalTasks = roadmap.days.length * (roadmap.days[0]?.tasks.length || 3);
+            const completedTasks = Object.values(progress).reduce((sum, day) => sum + Object.values(day).filter(Boolean).length, 0);
+            const completionPct = Math.round((completedTasks / totalTasks) * 100);
+            
+            return (
+              <div key={roadmap.id} onClick={() => setSelectedRoadmap(roadmap.id)} style={{ background: `linear-gradient(135deg, ${roadmap.color}08, rgba(10,5,30,0.75))`, border: `1px solid ${roadmap.color}33`, borderRadius: 12, padding: 24, cursor: "pointer", transition: "all 0.3s", position: "relative", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: 0, right: 0, width: 100, height: 100, background: `radial-gradient(circle at top right, ${roadmap.color}15, transparent 70%)`, pointerEvents: "none" }} />
+                
+                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 12 }}>
+                  <span style={{ fontSize: 48 }}>{roadmap.icon}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{ fontFamily: "'Cinzel', serif", fontSize: 20, color: roadmap.color, fontWeight: 700 }}>{roadmap.title}</div>
+                      {roadmap.isCustom && <span style={{ fontSize: 9, padding: "2px 8px", background: "rgba(167,139,250,0.15)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.3)", borderRadius: 10, fontFamily: "'Orbitron', sans-serif" }}>CUSTOM</span>}
+                    </div>
+                    <div style={{ fontSize: 13, color: "#7a8aaa", marginTop: 4 }}>{roadmap.description}</div>
+                    <div style={{ fontSize: 10, color: "#4a4a70", marginTop: 4, fontFamily: "'Orbitron', sans-serif" }}>{roadmap.days.length} DAYS</div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16 }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#4a4a70" }}>
+                      <span>PROGRESS</span>
+                      <span>{completedTasks}/{totalTasks} tasks</span>
+                    </div>
+                    <div style={{ height: 6, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: completionPct + "%", background: roadmap.color, borderRadius: 999, boxShadow: `0 0 8px ${roadmap.color}44`, transition: "width 0.4s" }} />
+                    </div>
+                  </div>
+                  <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 16, color: roadmap.color, fontWeight: 700 }}>{completionPct}%</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const [tab, setTab] = useState("Profile");
@@ -2205,6 +2952,19 @@ export default function App() {
 
   return (
     <div style={G.app}>
+      {/* Smoke shadow vignette on sides */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        pointerEvents: 'none',
+        zIndex: 1,
+        background: 'radial-gradient(ellipse at center, transparent 40%, rgba(5,5,15,0.4) 70%, rgba(5,5,15,0.8) 100%)',
+        boxShadow: 'inset 80px 0 120px rgba(5,5,15,0.9), inset -80px 0 120px rgba(5,5,15,0.9)'
+      }} />
+      
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -2232,7 +2992,7 @@ export default function App() {
       </div>
 
       <nav style={G.nav}>
-        {["Profile", "Quests", "Skills", "Stats", "Challenges"].map(t => (
+        {["Profile", "Quests", "Skills", "Stats", "Challenges", "Roadmaps"].map(t => (
           <button key={t} onClick={() => setTab(t)} style={G.navBtn(tab === t)}>{t}</button>
         ))}
       </nav>
@@ -2242,6 +3002,7 @@ export default function App() {
       {tab === "Skills"     && <SkillsTab     state={state} dispatch={dispatchWithOverlay} />}
       {tab === "Stats"      && <StatsTab      state={state} />}
       {tab === "Challenges" && <ChallengesTab state={state} dispatch={dispatch} />}
+      {tab === "Roadmaps"   && <RoadmapsTab   state={state} dispatch={dispatch} />}
 
       <Notification msg={state._notification} onClose={() => dispatch({ type: "CLEAR_NOTIFICATION" })} />
     </div>
