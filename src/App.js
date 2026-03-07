@@ -1184,6 +1184,67 @@ function StatsTab({ state }) {
           );
         })}
       </div>
+
+      {/* Skill Trees Stats */}
+      <div style={G.card}>
+        <div style={G.sectionTitle}><span>◈</span> Skill Trees</div>
+        {(state.activeTrees || []).length === 0 ? (
+          <div style={{ fontSize: 13, color: "#3a3a5a" }}>No active skill trees. Go to Skills to choose your path.</div>
+        ) : (state.activeTrees || []).map(key => {
+          const tree = SKILL_TREES[key];
+          const prog = (state.treeProgress || {})[key] || {};
+          const totalSteps = tree.skills.reduce((a, s) => a + s.steps.length, 0);
+          const doneSteps = tree.skills.reduce((a, s) => a + s.steps.filter((_, i) => prog[s.id + "_" + i]).length, 0);
+          const masteredSkills = tree.skills.filter(s => s.steps.every((_, i) => prog[s.id + "_" + i])).length;
+          const currentSkill = tree.skills.find(s => !s.steps.every((_, i) => prog[s.id + "_" + i]));
+          const currentDone = currentSkill ? currentSkill.steps.filter((_, i) => prog[currentSkill.id + "_" + i]).length : 0;
+          return (
+            <div key={key} style={{ marginBottom: 20, paddingBottom: 20, borderBottom: "1px solid rgba(60,50,100,0.2)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                <span style={{ fontSize: 20 }}>{tree.icon}</span>
+                <span style={{ fontFamily: "'Cinzel', serif", fontSize: 15, color: tree.color, fontWeight: 600 }}>{key}</span>
+                <span style={{ marginLeft: "auto", fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#4a4a70" }}>{masteredSkills}/{tree.skills.length} skills mastered</span>
+              </div>
+              {/* Overall progress bar */}
+              <div style={{ marginBottom: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5, fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70" }}>
+                  <span>OVERALL PROGRESS</span><span>{doneSteps}/{totalSteps} steps</span>
+                </div>
+                <div style={{ height: 5, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: doneSteps + "%" + " / " + totalSteps, background: tree.color, borderRadius: 999, boxShadow: "0 0 8px " + tree.color + "55", transition: "width 0.4s", width: ((doneSteps / totalSteps) * 100) + "%" }} />
+                </div>
+              </div>
+              {/* Per-skill breakdown */}
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {tree.skills.map((skill, idx) => {
+                  const done = skill.steps.filter((_, i) => prog[skill.id + "_" + i]).length;
+                  const complete = done === skill.steps.length;
+                  const isNext = !complete && (idx === 0 || tree.skills[idx-1].steps.every((_, i) => prog[tree.skills[idx-1].id + "_" + i]));
+                  return (
+                    <div key={skill.id} style={{ flex: "1 1 100px", padding: "8px 10px", borderRadius: 8, background: complete ? tree.color + "15" : isNext ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.2)", border: "1px solid " + (complete ? tree.color + "44" : isNext ? tree.color + "22" : "rgba(40,40,60,0.3)") }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 4 }}>
+                        <RankBadge rank={skill.rank} size={9} />
+                        <span style={{ fontFamily: "'Cinzel', serif", fontSize: 10, color: complete ? tree.color : isNext ? "#cdd6f4" : "#3a3a5a" }}>{skill.name}</span>
+                      </div>
+                      <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 7, color: complete ? tree.color + "88" : "#3a3a5a", marginBottom: 4 }}>{done}/{skill.steps.length} {complete ? "✓" : ""}</div>
+                      <div style={{ height: 2, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: ((done / skill.steps.length) * 100) + "%", background: tree.color, borderRadius: 999 }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {/* Current step hint */}
+              {currentSkill && (
+                <div style={{ marginTop: 10, padding: "8px 12px", borderRadius: 8, background: "rgba(255,255,255,0.02)", border: "1px solid " + tree.color + "18" }}>
+                  <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70", letterSpacing: 1, marginBottom: 4 }}>NEXT STEP — {currentSkill.name} ({currentDone + 1}/10)</div>
+                  <div style={{ fontSize: 12, color: "#7a8aaa", fontFamily: "'Rajdhani', sans-serif" }}>{currentSkill.steps[currentDone]}</div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
