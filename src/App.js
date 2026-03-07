@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const STORAGE_KEY = "hunter-system-v10";
+const STORAGE_KEY = "hunter-system-v11";
 
 // ─── EXP & Leveling ───────────────────────────────────────────────────────────
 const EXP_TABLE = { E: 80, D: 220, C: 600, B: 1800, A: 5000, S: 15000 };
@@ -157,6 +157,8 @@ const defaultState = {
   xpLog: [],
   questsCompleted: 0,
   weeklyResetDate: null,
+  activeTrees: [],
+  treeProgress: {},
 };
 
 // ─── Colors ───────────────────────────────────────────────────────────────────
@@ -504,47 +506,551 @@ function QuestsTab({ state, dispatch, flashQuestId }) {
   );
 }
 
+// ─── Skill Tree Data ──────────────────────────────────────────────────────────
+const SKILL_TREES = {
+  Body: {
+    color: "#ff2d55", icon: "⚔️", desc: "Physical conditioning and athletic performance.",
+    skills: [
+      { id: "body_1", name: "Awakened Body", rank: "E", steps: [
+        "Walk 30 minutes 3 days in a row",
+        "Do 10 push-ups without stopping",
+        "Run 1km without walking",
+        "Hold a plank for 30 seconds",
+        "Complete 7 consecutive days of any exercise",
+        "Do 20 push-ups in one set",
+        "Run 2km without stopping",
+        "Touch your toes (or get within 10cm)",
+        "Do 10 bodyweight squats with good form",
+        "Complete a full week of morning movement",
+      ]},
+      { id: "body_2", name: "Runner", rank: "D", steps: [
+        "Run 3km without stopping",
+        "Run 3 times in one week",
+        "Complete a 5km run",
+        "Run 5km under 35 minutes",
+        "Run on 4 different days in one week",
+        "Complete a 7km run",
+        "Run 20km total in one month",
+        "Do a long run of 8km",
+        "Run 5km under 30 minutes",
+        "Complete a 10km run",
+      ]},
+      { id: "body_3", name: "Athlete", rank: "C", steps: [
+        "Do 50 consecutive push-ups",
+        "Run 10km under 60 minutes",
+        "Complete 100 push-ups in a single day",
+        "Do 20 pull-ups in one session",
+        "Run 15km without stopping",
+        "Hold a 3-minute plank",
+        "Do 200 push-ups in a single day",
+        "Complete a half marathon (21.1km)",
+        "Run 100km total in one month",
+        "Train 5 days per week for 4 consecutive weeks",
+      ]},
+      { id: "body_4", name: "Elite", rank: "B", steps: [
+        "Run a half marathon under 1h45m",
+        "Do 100 pull-ups in a single session",
+        "Complete a full marathon (42.2km)",
+        "Hold a 5-minute plank",
+        "Train twice a day for 2 consecutive weeks",
+        "Run 200km total in one month",
+        "Do 500 push-ups in a single day",
+        "Complete a marathon under 4 hours",
+        "Maintain elite training for 3 consecutive months",
+        "Complete an ultra-distance event (50km+)",
+      ]},
+    ],
+  },
+  Mind: {
+    color: "#64d2ff", icon: "🧠", desc: "Intellectual capacity, deep focus, and knowledge.",
+    skills: [
+      { id: "mind_1", name: "Awakened Mind", rank: "E", steps: [
+        "Read for 20 minutes every day for a week",
+        "Finish one full book",
+        "Meditate for 10 minutes for 5 consecutive days",
+        "Write a journal entry every day for 7 days",
+        "Study a new topic for 1 hour",
+        "Put your phone away for 2 hours and read",
+        "Summarize a book in your own words",
+        "Finish 3 books in one month",
+        "Meditate for 20 minutes daily for 2 weeks",
+        "Learn one concrete new skill or concept",
+      ]},
+      { id: "mind_2", name: "Deep Thinker", rank: "D", steps: [
+        "Do 2 hours of uninterrupted study daily for 5 days",
+        "Finish 5 books in one month",
+        "Write a 500-word essay on something you learned",
+        "Zero phone usage for first hour of every day for 2 weeks",
+        "Study the same subject for 20 consecutive days",
+        "Take structured notes for every book you read this month",
+        "Memorize something meaningful (poem, speech, facts)",
+        "Teach someone else something you learned recently",
+        "Complete an online course or structured curriculum",
+        "Maintain a daily reading habit for 30 consecutive days",
+      ]},
+      { id: "mind_3", name: "Scholar", rank: "C", steps: [
+        "Read 25 books total",
+        "Do 4 hours of deep work daily for 2 weeks",
+        "Write a 2000-word analysis or essay",
+        "Study a second language for 30 consecutive days",
+        "Read 3 books in different fields this month",
+        "Complete a challenging course or certification",
+        "Build a personal knowledge system (notes, connections)",
+        "Spend 100 hours studying one subject",
+        "Debate or discuss a complex topic with someone smarter",
+        "Read 50 books total",
+      ]},
+      { id: "mind_4", name: "Philosopher", rank: "B", steps: [
+        "Read 100 books total",
+        "Maintain 4+ hours of deep work daily for 1 month",
+        "Write and publish or share a long-form piece of work",
+        "Master a second language to conversational level",
+        "Spend 500 hours studying one domain",
+        "Mentor or teach someone over multiple sessions",
+        "Build something (project, business, system) from knowledge alone",
+        "Read and understand a dense academic text or classic work",
+        "Develop a personal philosophy — written and tested",
+        "Maintain elite mental output for 6 consecutive months",
+      ]},
+    ],
+  },
+  Discipline: {
+    color: "#ff9500", icon: "🔥", desc: "Control over your habits, comfort, and environment.",
+    skills: [
+      { id: "disc_1", name: "Awakened Will", rank: "E", steps: [
+        "Wake up at the same time 5 days in a row",
+        "Take a cold shower for 3 consecutive days",
+        "No junk food for 7 consecutive days",
+        "Make your bed every morning for 2 weeks",
+        "Sleep before midnight 7 nights in a row",
+        "No social media for 3 consecutive days",
+        "Complete your to-do list every day for a week",
+        "Cold shower every day for 2 weeks",
+        "Wake up before 7AM for 14 consecutive days",
+        "Complete all daily habits for 21 consecutive days",
+      ]},
+      { id: "disc_2", name: "Iron Monk", rank: "D", steps: [
+        "Cold shower every day for 30 consecutive days",
+        "No junk food for 30 consecutive days",
+        "Wake up before 6AM every day for 3 weeks",
+        "No alcohol for 30 consecutive days",
+        "Zero social media for 2 weeks",
+        "Sleep 7–8 hours every night for 30 days",
+        "Complete a written plan every night for 30 days",
+        "No phone for first 2 hours of every day for 3 weeks",
+        "Meditate every morning for 30 consecutive days",
+        "Maintain all core habits for 60 consecutive days",
+      ]},
+      { id: "disc_3", name: "Ascetic", rank: "C", steps: [
+        "Fast for 24 hours (water only)",
+        "No sugar for 30 consecutive days",
+        "Cold shower every day for 90 consecutive days",
+        "Wake up before 5:30AM for 30 consecutive days",
+        "Zero entertainment (TV/games/social) for 2 weeks",
+        "Complete your top priority task first, every day, for 2 months",
+        "No complaints for 21 consecutive days",
+        "Maintain a flawless diet for 60 consecutive days",
+        "Fast 24 hours once per week for 4 weeks",
+        "Maintain elite discipline habits for 90 consecutive days",
+      ]},
+      { id: "disc_4", name: "Shadow", rank: "B", steps: [
+        "Cold shower every day for 1 full year",
+        "Wake up before 5AM for 60 consecutive days",
+        "Complete a 7-day water fast or extended fast",
+        "Zero social media for 90 consecutive days",
+        "Maintain perfect sleep schedule for 6 months",
+        "Never miss a single planned habit for 60 days straight",
+        "Live on a stripped-down schedule for 30 days (no entertainment)",
+        "Sustain elite discipline through a major life disruption",
+        "Help someone else build discipline habits that stick",
+        "Maintain shadow-level habits for 6 consecutive months",
+      ]},
+    ],
+  },
+  Craft: {
+    color: "#bf5af2", icon: "✨", desc: "Mastery of a creative or technical skill.",
+    skills: [
+      { id: "craft_1", name: "Dabbler", rank: "E", steps: [
+        "Spend 5 hours total practicing your craft",
+        "Complete one beginner tutorial or lesson",
+        "Create your first finished piece (however rough)",
+        "Practice for 30 minutes every day for a week",
+        "Study one master in your field",
+        "Share your work with one other person",
+        "Spend 20 hours total on your craft",
+        "Complete a structured beginner course",
+        "Finish 3 small projects",
+        "Practice consistently for 30 consecutive days",
+      ]},
+      { id: "craft_2", name: "Practitioner", rank: "D", steps: [
+        "Reach 50 total hours of deliberate practice",
+        "Complete an intermediate-level project",
+        "Receive and act on feedback from someone skilled",
+        "Practice 1 hour every day for 30 days",
+        "Study and analyze the work of 3 masters in your field",
+        "Identify and work specifically on your weakest area",
+        "Finish a project you're genuinely proud of",
+        "Reach 100 total hours of deliberate practice",
+        "Teach a beginner concept in your field",
+        "Maintain consistent daily practice for 60 days",
+      ]},
+      { id: "craft_3", name: "Expert", rank: "C", steps: [
+        "Reach 500 total hours of deliberate practice",
+        "Complete a complex, multi-week project",
+        "Get recognition or positive response from a skilled audience",
+        "Develop your own personal style or approach",
+        "Practice 2 hours daily for 60 consecutive days",
+        "Solve a problem in your craft others couldn't",
+        "Produce work at a level most people never reach",
+        "Complete and publish or submit a major work",
+        "Mentor someone and see them improve measurably",
+        "Reach 1000 total hours of deliberate practice",
+      ]},
+      { id: "craft_4", name: "Master", rank: "B", steps: [
+        "Reach 2000 total hours of deliberate practice",
+        "Be paid or compensated for your work",
+        "Complete a masterwork — your best piece to date",
+        "Build a body of work (10+ finished pieces)",
+        "Be sought out for your skill by others",
+        "Develop a methodology you can articulate and teach",
+        "Produce work that rivals professionals in your field",
+        "Sustain daily practice for 6 consecutive months",
+        "Complete a project that changes how others see your work",
+        "Reach 5000 total hours of deliberate practice",
+      ]},
+    ],
+  },
+  Finance: {
+    color: "#ffd60a", icon: "💰", desc: "Financial intelligence, savings, and wealth building.",
+    skills: [
+      { id: "fin_1", name: "Financially Awake", rank: "E", steps: [
+        "Track every expense for 30 consecutive days",
+        "Write down your exact net worth (assets minus debts)",
+        "Create a monthly budget and stick to it for one month",
+        "Cut one unnecessary recurring expense",
+        "Save your first $100 / equivalent intentionally",
+        "Read one book on personal finance",
+        "Build a 2-week emergency fund",
+        "Automate at least one savings transfer",
+        "Go 30 days without an impulse purchase",
+        "Build a 1-month emergency fund",
+      ]},
+      { id: "fin_2", name: "Stable", rank: "D", steps: [
+        "Build a 3-month emergency fund",
+        "Eliminate one category of debt entirely",
+        "Live below your means for 3 consecutive months",
+        "Increase your income by any amount intentionally",
+        "Invest your first amount (any amount) in a real asset",
+        "Read 3 books on finance, investing, or wealth",
+        "Have zero credit card debt for 3 months",
+        "Save 20% of income for 3 consecutive months",
+        "Build a 6-month emergency fund",
+        "Create a written 1-year financial plan",
+      ]},
+      { id: "fin_3", name: "Builder", rank: "C", steps: [
+        "Generate your first income outside your main job",
+        "Invest consistently every month for 6 months",
+        "Pay off all high-interest debt",
+        "Increase income by 20% or more in one year",
+        "Build a side income that covers one bill",
+        "Reach a net worth milestone meaningful to you",
+        "Have 1 year of expenses saved or invested",
+        "Understand and invest in at least 2 asset classes",
+        "Create a 5-year written financial roadmap",
+        "Build a side income that covers your rent/mortgage",
+      ]},
+      { id: "fin_4", name: "Wealth Architect", rank: "B", steps: [
+        "Achieve financial independence from primary employment",
+        "Build passive income covering all basic expenses",
+        "Reach a net worth of 10× your annual expenses",
+        "Own an asset that generates income without your labor",
+        "Invest in real estate, equity, or business ownership",
+        "Build a business or system that runs without you daily",
+        "Help someone else achieve financial stability",
+        "Diversify income across 3+ independent sources",
+        "Achieve location and time freedom through finances",
+        "Sustain wealth-building habits for 5 consecutive years",
+      ]},
+    ],
+  },
+  Social: {
+    color: "#30d158", icon: "🌐", desc: "Communication, influence, and real-world connections.",
+    skills: [
+      { id: "soc_1", name: "Connected", rank: "E", steps: [
+        "Start a conversation with one stranger this week",
+        "Reach out to someone you haven't spoken to in 6+ months",
+        "Attend one social event outside your comfort zone",
+        "Introduce yourself to one new person at work or online",
+        "Have a 30-minute deep conversation (no phones)",
+        "Give a genuine compliment to 3 different people",
+        "Follow up with someone you recently met",
+        "Join one new community, club, or group",
+        "Spend quality time with 5 different people in one month",
+        "Proactively help someone without being asked",
+      ]},
+      { id: "soc_2", name: "Communicator", rank: "D", steps: [
+        "Give a short speech or presentation to any audience",
+        "Have a difficult conversation you've been avoiding",
+        "Listen actively for an entire conversation — zero talking about yourself",
+        "Negotiate something (price, raise, terms) successfully",
+        "Build a genuine friendship with someone new this year",
+        "Write a message that genuinely helped someone",
+        "Resolve a conflict constructively",
+        "Present your ideas clearly in a group setting",
+        "Network intentionally — follow up after every meeting",
+        "Maintain meaningful contact with 10 people regularly",
+      ]},
+      { id: "soc_3", name: "Influential", rank: "C", steps: [
+        "Lead a team, group, or project to a successful outcome",
+        "Speak publicly to an audience of 20+ people",
+        "Build a reputation in one specific field or community",
+        "Have someone else change their behavior because of your influence",
+        "Build an audience (online or offline) of 100+ engaged people",
+        "Mentor someone through a meaningful challenge",
+        "Be introduced as an expert or go-to person in any domain",
+        "Successfully persuade a skeptic using logic and empathy",
+        "Build a network of genuinely mutual relationships",
+        "Create something that positively impacts 100+ people",
+      ]},
+      { id: "soc_4", name: "Leader", rank: "B", steps: [
+        "Build and lead a team that achieves a major goal",
+        "Speak to an audience of 100+ people",
+        "Build an audience or following of 1000+ people",
+        "Create a community or organization from scratch",
+        "Be the person others come to when they need direction",
+        "Develop and promote someone who surpasses your own early level",
+        "Make a decision that impacts 50+ people positively",
+        "Build a reputation that precedes you in your field",
+        "Write, record, or create content that reaches thousands",
+        "Sustain leadership impact for 2+ consecutive years",
+      ]},
+    ],
+  },
+};
+
+const TREE_KEYS = Object.keys(SKILL_TREES);
+const MAX_ACTIVE_TREES = 3;
+
 // ─── Skills Tab ───────────────────────────────────────────────────────────────
-function SkillsTab({ state }) {
-  const unlocked = state.skills.filter(s => s.unlocked).length;
-  const catColors = { Body: "#ff2d55", Mind: "#64d2ff", Life: "#ffd60a" };
+function SkillsTab({ state, dispatch }) {
+  const activeTrees = state.activeTrees || [];
+  const treeProgress = state.treeProgress || {};
+  const [view, setView] = useState(activeTrees.length > 0 ? "trees" : "select");
+  const [selectedTree, setSelectedTree] = useState(null);
 
-  return (
-    <div style={G.page}>
-      <div style={{ ...G.card, background: "linear-gradient(135deg, rgba(20,10,50,0.8), rgba(10,5,30,0.9))", marginBottom: 24 }}>
-        <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 10, color: "#5a5a80", letterSpacing: 3, marginBottom: 4 }}>LIFE MILESTONES</div>
-        <div style={{ fontFamily: "'Cinzel', serif", fontSize: 22, color: "#e8d5ff", marginBottom: 12 }}>{unlocked} / {state.skills.length} Milestones Reached</div>
-        <div style={{ height: 4, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "hidden" }}>
-          <div style={{ height: "100%", width: `${(unlocked / state.skills.length) * 100}%`, background: "linear-gradient(90deg, #a78bfa, #c4b5fd)", borderRadius: 999, boxShadow: "0 0 10px rgba(167,139,250,0.5)" }} />
+  // Selection screen
+  if (view === "select") {
+    return (
+      <div style={G.page}>
+        <div style={{ ...G.card, background: "linear-gradient(135deg, rgba(20,10,50,0.85), rgba(10,5,30,0.95))", marginBottom: 24 }}>
+          <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 10, color: "#5a5a80", letterSpacing: 3, marginBottom: 6 }}>SKILL TREE SYSTEM</div>
+          <div style={{ fontFamily: "'Cinzel', serif", fontSize: 22, color: "#e8d5ff", marginBottom: 8 }}>Choose Your Path</div>
+          <div style={{ fontSize: 13, color: "#4a5070", lineHeight: 1.7 }}>
+            Select up to <span style={{ color: "#a78bfa" }}>3 trees</span> to pursue. Each tree is a real-life mastery path with 10 concrete steps per skill. Complete all 10 steps to unlock the next skill in the chain.
+          </div>
+          <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 8, background: "rgba(255,149,0,0.08)", border: "1px solid rgba(255,149,0,0.2)", fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#ff9500", letterSpacing: 1 }}>
+            ⚠ Swapping a tree resets all progress in that tree
+          </div>
         </div>
-        <div style={{ marginTop: 14, display: "flex", gap: 12 }}>
-          {Object.entries(catColors).map(([cat, col]) => (
-            <div key={cat} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <div style={{ width: 8, height: 8, borderRadius: 2, background: col }} />
-              <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#4a4a70" }}>{cat}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 12 }}>
-        {state.skills.map(s => {
-          const col = catColors[s.category] || "#a78bfa";
-          return (
-            <div key={s.id} style={{ background: s.unlocked ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.3)", border: `1px solid ${s.unlocked ? RANK_COLOR[s.rank] + "33" : "rgba(30,30,50,0.5)"}`, borderRadius: 12, padding: 18, boxShadow: s.unlocked ? `0 0 20px ${RANK_GLOW[s.rank]}` : "none", position: "relative", overflow: "hidden", transition: "all 0.3s" }}>
-              {s.unlocked && <div style={{ position: "absolute", top: 0, right: 0, width: 80, height: 80, background: `radial-gradient(circle at top right, ${RANK_GLOW[s.rank]}, transparent 70%)`, pointerEvents: "none" }} />}
-              {!s.unlocked && <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)", borderRadius: 12, zIndex: 2, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ fontSize: 20, opacity: 0.25 }}>🔒</span></div>}
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                <RankBadge rank={s.rank} size={12} />
-                <span style={{ fontFamily: "'Cinzel', serif", fontSize: 14, fontWeight: 600, color: s.unlocked ? "#e8d5ff" : "#2a2a3a" }}>{s.name}</span>
-                <span style={{ marginLeft: "auto", fontSize: 8, padding: "2px 8px", borderRadius: 10, background: `${col}15`, color: s.unlocked ? col : col + "44", border: `1px solid ${col}30`, fontFamily: "'Orbitron', sans-serif" }}>{s.category.toUpperCase()}</span>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 14 }}>
+          {TREE_KEYS.map(key => {
+            const tree = SKILL_TREES[key];
+            const isActive = activeTrees.includes(key);
+            const prog = treeProgress[key] || {};
+            const totalSteps = tree.skills.reduce((a, s) => a + s.steps.length, 0);
+            const doneSteps = tree.skills.reduce((a, s) => a + s.steps.filter((_, i) => prog[`${s.id}_${i}`]).length, 0);
+            const canAdd = !isActive && activeTrees.length < MAX_ACTIVE_TREES;
+            return (
+              <div key={key} style={{ background: isActive ? `${tree.color}0d` : "rgba(10,8,30,0.7)", border: `1px solid ${isActive ? tree.color + "44" : "rgba(60,50,100,0.3)"}`, borderRadius: 14, padding: 20, position: "relative", overflow: "hidden", transition: "all 0.2s" }}>
+                {isActive && <div style={{ position: "absolute", top: 0, right: 0, width: 100, height: 100, background: `radial-gradient(circle at top right, ${tree.color}20, transparent 70%)`, pointerEvents: "none" }} />}
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                  <span style={{ fontSize: 28 }}>{tree.icon}</span>
+                  <div>
+                    <div style={{ fontFamily: "'Cinzel', serif", fontSize: 16, color: isActive ? tree.color : "#cdd6f4", fontWeight: 600 }}>{key}</div>
+                    <div style={{ fontSize: 11, color: "#4a5070", marginTop: 2 }}>{tree.skills.length} skills · {totalSteps} steps</div>
+                  </div>
+                  {isActive && <span style={{ marginLeft: "auto", fontSize: 9, padding: "3px 10px", borderRadius: 20, background: `${tree.color}20`, color: tree.color, border: `1px solid ${tree.color}44`, fontFamily: "'Orbitron', sans-serif" }}>ACTIVE</span>}
+                </div>
+                <div style={{ fontSize: 12, color: "#4a5070", marginBottom: 14, lineHeight: 1.6 }}>{tree.desc}</div>
+                {isActive && (
+                  <div style={{ marginBottom: 14 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5, fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70" }}>
+                      <span>PROGRESS</span><span>{doneSteps}/{totalSteps} steps</span>
+                    </div>
+                    <div style={{ height: 3, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${(doneSteps / totalSteps) * 100}%`, background: tree.color, borderRadius: 999, boxShadow: `0 0 6px ${tree.color}66`, transition: "width 0.4s" }} />
+                    </div>
+                  </div>
+                )}
+                <div style={{ display: "flex", gap: 8 }}>
+                  {isActive ? (
+                    <>
+                      <button onClick={() => { setSelectedTree(key); setView("detail"); }} style={{ ...G.btnSuccess, borderColor: `${tree.color}44`, color: tree.color, background: `${tree.color}12`, flex: 1 }}>Open Tree</button>
+                      <button onClick={() => dispatch({ type: "DEACTIVATE_TREE", key })} style={{ ...G.btn, padding: "8px 12px", color: "#ff453a", borderColor: "rgba(255,69,58,0.2)", background: "rgba(255,69,58,0.05)", fontSize: 9 }}>Swap</button>
+                    </>
+                  ) : (
+                    <button onClick={() => { if (canAdd) dispatch({ type: "ACTIVATE_TREE", key }); }} style={{ ...G.btn, flex: 1, borderColor: canAdd ? `${tree.color}44` : "rgba(60,60,80,0.3)", color: canAdd ? tree.color : "#3a3a5a", background: canAdd ? `${tree.color}0d` : "transparent", cursor: canAdd ? "pointer" : "default", fontSize: 9 }}>
+                      {activeTrees.length >= MAX_ACTIVE_TREES ? "Max 3 Active" : "Activate"}
+                    </button>
+                  )}
+                </div>
               </div>
-              <div style={{ fontSize: 12, color: s.unlocked ? "#7a8aaa" : "#252535", lineHeight: 1.7 }}>{s.desc}</div>
-              {!s.unlocked && <div style={{ marginTop: 8, fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#2a2a40", letterSpacing: 1 }}>UNLOCKS AT LEVEL {s.unlockLevel}</div>}
+            );
+          })}
+        </div>
+        {activeTrees.length > 0 && (
+          <div style={{ marginTop: 20, textAlign: "center" }}>
+            <button onClick={() => setView("trees")} style={G.btn}>View Active Trees →</button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Detail view for one tree
+  if (view === "detail" && selectedTree) {
+    const tree = SKILL_TREES[selectedTree];
+    const prog = treeProgress[selectedTree] || {};
+    // Find current skill = first incomplete
+    const currentSkillIdx = tree.skills.findIndex(s => {
+      const done = s.steps.filter((_, i) => prog[`${s.id}_${i}`]).length;
+      return done < s.steps.length;
+    });
+    return (
+      <div style={G.page}>
+        <button onClick={() => setView("trees")} style={{ ...G.btn, marginBottom: 20, fontSize: 9 }}>← Back</button>
+        <div style={{ ...G.card, background: `linear-gradient(135deg, ${tree.color}0d, rgba(10,5,30,0.95))`, border: `1px solid ${tree.color}33`, marginBottom: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <span style={{ fontSize: 36 }}>{tree.icon}</span>
+            <div>
+              <div style={{ fontFamily: "'Cinzel', serif", fontSize: 24, color: tree.color, fontWeight: 700 }}>{selectedTree}</div>
+              <div style={{ fontSize: 12, color: "#4a5070", marginTop: 4 }}>{tree.desc}</div>
+            </div>
+          </div>
+        </div>
+        {tree.skills.map((skill, skillIdx) => {
+          const doneCount = skill.steps.filter((_, i) => prog[`${skill.id}_${i}`]).length;
+          const isComplete = doneCount === skill.steps.length;
+          const isLocked = skillIdx > 0 && !tree.skills[skillIdx - 1].steps.every((_, i) => prog[`${tree.skills[skillIdx-1].id}_${i}`]);
+          const isCurrent = skillIdx === currentSkillIdx;
+          const pct = (doneCount / skill.steps.length) * 100;
+          return (
+            <div key={skill.id} style={{ marginBottom: 16 }}>
+              {/* Connector line */}
+              {skillIdx > 0 && (
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
+                  <div style={{ width: 2, height: 20, background: isLocked ? "rgba(60,60,80,0.4)" : `${tree.color}55` }} />
+                </div>
+              )}
+              <div style={{ background: isComplete ? `${tree.color}10` : isLocked ? "rgba(0,0,0,0.35)" : "rgba(10,8,30,0.7)", border: `1px solid ${isComplete ? tree.color + "55" : isLocked ? "rgba(40,40,60,0.4)" : isCurrent ? tree.color + "33" : "rgba(60,50,100,0.25)"}`, borderRadius: 12, padding: 20, opacity: isLocked ? 0.45 : 1, position: "relative", overflow: "hidden" }}>
+                {isComplete && <div style={{ position: "absolute", top: 0, right: 0, width: 100, height: 100, background: `radial-gradient(circle at top right, ${tree.color}20, transparent 70%)`, pointerEvents: "none" }} />}
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                  <RankBadge rank={skill.rank} size={13} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontFamily: "'Cinzel', serif", fontSize: 15, color: isComplete ? tree.color : isLocked ? "#2a2a3a" : "#e8d5ff", fontWeight: 600 }}>{skill.name}</div>
+                    <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70", marginTop: 3, letterSpacing: 1 }}>{doneCount}/{skill.steps.length} STEPS</div>
+                  </div>
+                  {isComplete && <span style={{ fontSize: 10, color: tree.color, fontFamily: "'Orbitron', sans-serif", letterSpacing: 1 }}>✓ MASTERED</span>}
+                  {isLocked && <span style={{ fontSize: 10, color: "#3a3a5a", fontFamily: "'Orbitron', sans-serif" }}>🔒 LOCKED</span>}
+                </div>
+                {/* Progress bar */}
+                <div style={{ marginBottom: isLocked ? 0 : 14 }}>
+                  <div style={{ height: 4, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${pct}%`, background: isComplete ? tree.color : `linear-gradient(90deg, ${tree.color}88, ${tree.color})`, borderRadius: 999, transition: "width 0.4s", boxShadow: pct > 0 ? `0 0 6px ${tree.color}55` : "none" }} />
+                  </div>
+                </div>
+                {/* Steps */}
+                {!isLocked && skill.steps.map((step, stepIdx) => {
+                  const stepKey = `${skill.id}_${stepIdx}`;
+                  const isDone = !!prog[stepKey];
+                  const prevDone = stepIdx === 0 || !!prog[`${skill.id}_${stepIdx - 1}`];
+                  const canCheck = prevDone && !isDone;
+                  return (
+                    <div key={stepIdx} onClick={() => { if (!isDone && canCheck) dispatch({ type: "TOGGLE_SKILL_STEP", tree: selectedTree, stepKey }); }} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "9px 0", borderBottom: stepIdx < skill.steps.length - 1 ? "1px solid rgba(40,40,60,0.3)" : "none", cursor: canCheck ? "pointer" : "default", opacity: isDone ? 0.5 : !prevDone ? 0.25 : 1, transition: "opacity 0.2s" }}>
+                      <div style={{ width: 18, height: 18, borderRadius: 5, flexShrink: 0, marginTop: 1, border: `1px solid ${isDone ? tree.color : canCheck ? tree.color + "66" : "rgba(80,80,120,0.3)"}`, background: isDone ? `${tree.color}25` : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: tree.color, transition: "all 0.2s" }}>{isDone ? "✓" : stepIdx + 1}</div>
+                      <span style={{ fontSize: 13, color: isDone ? "#3a5a4a" : !prevDone ? "#252535" : "#cdd6f4", textDecoration: isDone ? "line-through" : "none", fontFamily: "'Rajdhani', sans-serif", lineHeight: 1.5, flex: 1 }}>{step}</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           );
         })}
       </div>
+    );
+  }
+
+  // Trees overview
+  return (
+    <div style={G.page}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 11, color: "#5a5a80", letterSpacing: 3 }}>ACTIVE TREES ({activeTrees.length}/{MAX_ACTIVE_TREES})</div>
+        <button onClick={() => setView("select")} style={{ ...G.btn, fontSize: 9, padding: "7px 14px" }}>Manage Trees</button>
+      </div>
+      {activeTrees.length === 0 && (
+        <div style={{ textAlign: "center", padding: "60px 0" }}>
+          <div style={{ fontSize: 40, marginBottom: 16 }}>🌱</div>
+          <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 11, color: "#2a2a40", letterSpacing: 3, marginBottom: 12 }}>NO ACTIVE TREES</div>
+          <button onClick={() => setView("select")} style={G.btn}>Choose Your Path</button>
+        </div>
+      )}
+      {activeTrees.map(key => {
+        const tree = SKILL_TREES[key];
+        const prog = treeProgress[key] || {};
+        const currentSkillIdx = tree.skills.findIndex(s => s.steps.filter((_, i) => prog[`${s.id}_${i}`]).length < s.steps.length);
+        const currentSkill = currentSkillIdx >= 0 ? tree.skills[currentSkillIdx] : null;
+        const totalSteps = tree.skills.reduce((a, s) => a + s.steps.length, 0);
+        const doneSteps = tree.skills.reduce((a, s) => a + s.steps.filter((_, i) => prog[`${s.id}_${i}`]).length, 0);
+        const currentDone = currentSkill ? currentSkill.steps.filter((_, i) => prog[`${currentSkill.id}_${i}`]).length : 0;
+        return (
+          <div key={key} style={{ ...G.card, background: `${tree.color}07`, border: `1px solid ${tree.color}30`, marginBottom: 16, position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, right: 0, width: 140, height: 140, background: `radial-gradient(circle at top right, ${tree.color}15, transparent 70%)`, pointerEvents: "none" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <span style={{ fontSize: 28 }}>{tree.icon}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: "'Cinzel', serif", fontSize: 18, color: tree.color, fontWeight: 700 }}>{key}</div>
+                <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70", marginTop: 3, letterSpacing: 1 }}>{doneSteps}/{totalSteps} TOTAL STEPS</div>
+              </div>
+              <button onClick={() => { setSelectedTree(key); setView("detail"); }} style={{ ...G.btn, fontSize: 9, padding: "7px 14px", borderColor: `${tree.color}44`, color: tree.color, background: `${tree.color}0d` }}>Open →</button>
+            </div>
+            {/* Overall progress */}
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ height: 4, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "hidden" }}>
+                <div style={{ height: "100%", width: `${(doneSteps / totalSteps) * 100}%`, background: `linear-gradient(90deg, ${tree.color}88, ${tree.color})`, borderRadius: 999, transition: "width 0.4s", boxShadow: `0 0 8px ${tree.color}44` }} />
+              </div>
+            </div>
+            {/* Skill chain overview */}
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+              {tree.skills.map((skill, idx) => {
+                const done = skill.steps.filter((_, i) => prog[`${skill.id}_${i}`]).length;
+                const complete = done === skill.steps.length;
+                const isCurr = idx === currentSkillIdx;
+                return (
+                  <div key={skill.id} style={{ flex: "1 1 120px", padding: "10px 12px", borderRadius: 8, background: complete ? `${tree.color}15` : isCurr ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.2)", border: `1px solid ${complete ? tree.color + "44" : isCurr ? tree.color + "22" : "rgba(40,40,60,0.3)"}` }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                      <RankBadge rank={skill.rank} size={10} />
+                      <span style={{ fontFamily: "'Cinzel', serif", fontSize: 11, color: complete ? tree.color : isCurr ? "#e8d5ff" : "#3a3a5a" }}>{skill.name}</span>
+                    </div>
+                    <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 7, color: complete ? tree.color + "88" : "#3a3a5a" }}>{done}/{skill.steps.length} {complete ? "✓" : ""}</div>
+                    <div style={{ marginTop: 5, height: 2, background: "rgba(255,255,255,0.04)", borderRadius: 999, overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${(done / skill.steps.length) * 100}%`, background: tree.color, borderRadius: 999 }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {/* Current active step hint */}
+            {currentSkill && (
+              <div style={{ marginTop: 14, padding: "10px 14px", borderRadius: 8, background: "rgba(255,255,255,0.02)", border: `1px solid ${tree.color}20` }}>
+                <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70", letterSpacing: 1, marginBottom: 5 }}>CURRENT STEP — {currentSkill.name}</div>
+                <div style={{ fontSize: 12, color: "#8090b0", fontFamily: "'Rajdhani', sans-serif" }}>
+                  {currentSkill.steps[currentDone] || "All steps complete"}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -923,6 +1429,56 @@ function reducer(state, action) {
       return { ...state, challenges: state.challenges.map(reset) };
     }
 
+    case "ACTIVATE_TREE": {
+      const active = state.activeTrees || [];
+      if (active.includes(action.key) || active.length >= MAX_ACTIVE_TREES) return state;
+      return { ...state, activeTrees: [...active, action.key], _notification: `🌱 ${action.key} tree activated — your path begins` };
+    }
+
+    case "DEACTIVATE_TREE": {
+      const active = (state.activeTrees || []).filter(k => k !== action.key);
+      const prog = { ...(state.treeProgress || {}) };
+      delete prog[action.key];
+      return { ...state, activeTrees: active, treeProgress: prog, _notification: `⚠ ${action.key} tree removed — progress cleared` };
+    }
+
+    case "TOGGLE_SKILL_STEP": {
+      const prog = { ...(state.treeProgress || {}) };
+      const treeProg = { ...(prog[action.tree] || {}) };
+      const wasChecked = !!treeProg[action.stepKey];
+      treeProg[action.stepKey] = !wasChecked;
+      prog[action.tree] = treeProg;
+
+      // Unchecking — no XP change
+      if (wasChecked) return { ...state, treeProgress: prog };
+
+      // Step XP by skill rank
+      const tree = SKILL_TREES[action.tree];
+      const STEP_XP  = { E: 30,  D: 100,  C: 300,  B: 900,  A: 2500,  S: 8000 };
+      const SKILL_XP = { E: 200, D: 800,  C: 3500, B: 12000, A: 50000, S: 150000 };
+
+      for (const skill of tree.skills) {
+        if (!action.stepKey.startsWith(skill.id)) continue;
+        const stepXP = STEP_XP[skill.rank] || 30;
+        const allDone = skill.steps.every((_, i) => treeProg[`${skill.id}_${i}`]);
+
+        if (allDone) {
+          // Skill mastered — give step XP + bonus skill completion XP
+          const totalXP = stepXP + SKILL_XP[skill.rank];
+          const { newExp, newLevel, bonusPoints, newSkills } = applyExp(state, totalXP);
+          return { ...state, treeProgress: prog, exp: newExp, totalExp: (state.totalExp || 0) + totalXP, level: newLevel, statPoints: bonusPoints, skills: newSkills, _notification: `✨ SKILL MASTERED: ${skill.name}\n+${stepXP} step XP  +${SKILL_XP[skill.rank].toLocaleString()} mastery bonus` };
+        }
+
+        // Just a step — give step XP
+        const { newExp, newLevel, bonusPoints, newSkills } = applyExp(state, stepXP);
+        const notification = newLevel > state.level
+          ? `⬆ LEVEL UP! Reached Level ${newLevel}  •  +3 Stat Points`
+          : `+${stepXP} XP — ${tree.icon} ${action.tree} step complete`;
+        return { ...state, treeProgress: prog, exp: newExp, totalExp: (state.totalExp || 0) + stepXP, level: newLevel, statPoints: bonusPoints, skills: newSkills, _notification: notification };
+      }
+      return { ...state, treeProgress: prog };
+    }
+
     case "CLEAR_NOTIFICATION":
       return { ...state, _notification: null };
 
@@ -949,6 +1505,19 @@ export default function App() {
   const dispatch = useCallback((action) => {
     rawDispatch(prev => {
       const next = reducer(prev, action);
+      try { const { _notification, ...toSave } = next; localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave)); } catch {}
+      return next;
+    });
+  }, []);
+
+  // Dispatch with overlay support (for skill steps and challenges)
+  const dispatchWithOverlay = useCallback((action) => {
+    rawDispatch(prev => {
+      const next = reducer(prev, action);
+      const didRankUp = rankFromLevel(next.level) !== rankFromLevel(prev.level);
+      const didLevelUp = next.level > prev.level;
+      if (didRankUp)       setTimeout(() => setRankUpOverlay(rankFromLevel(next.level)), 350);
+      else if (didLevelUp) setTimeout(() => setLevelUpOverlay(next.level), 350);
       try { const { _notification, ...toSave } = next; localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave)); } catch {}
       return next;
     });
@@ -1013,7 +1582,7 @@ export default function App() {
 
       {tab === "Profile"    && <ProfileTab    state={state} dispatch={dispatchQuest} />}
       {tab === "Quests"     && <QuestsTab     state={state} dispatch={dispatchQuest} flashQuestId={flashQuestId} />}
-      {tab === "Skills"     && <SkillsTab     state={state} />}
+      {tab === "Skills"     && <SkillsTab     state={state} dispatch={dispatchWithOverlay} />}
       {tab === "Stats"      && <StatsTab      state={state} />}
       {tab === "Challenges" && <ChallengesTab state={state} dispatch={dispatch} />}
 
