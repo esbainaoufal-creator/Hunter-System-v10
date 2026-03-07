@@ -1,6 +1,29 @@
 import { useState, useEffect, useCallback } from "react";
 
 const STORAGE_KEY = "hunter-system-v11";
+const LEGACY_KEYS = ["hunter-system-v10", "hunter-system-v9", "hunter-system-v8"];
+
+function loadSavedState() {
+  // Try current key first
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return { ...defaultState, ...JSON.parse(saved), _notification: null };
+  } catch {}
+  // Migrate from any legacy key
+  for (const key of LEGACY_KEYS) {
+    try {
+      const legacy = localStorage.getItem(key);
+      if (legacy) {
+        const parsed = JSON.parse(legacy);
+        const migrated = { ...defaultState, ...parsed, activeTrees: parsed.activeTrees || [], treeProgress: parsed.treeProgress || {}, xpLog: parsed.xpLog || [], questsCompleted: parsed.questsCompleted || 0, weeklyResetDate: parsed.weeklyResetDate || null, _notification: null };
+        // Save under new key immediately
+        try { const { _notification, ...toSave } = migrated; localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave)); } catch {}
+        return migrated;
+      }
+    } catch {}
+  }
+  return defaultState;
+}
 
 // ─── EXP & Leveling ───────────────────────────────────────────────────────────
 const EXP_TABLE = { E: 80, D: 220, C: 600, B: 1800, A: 5000, S: 15000 };
@@ -1494,13 +1517,7 @@ export default function App() {
   const [rankUpOverlay, setRankUpOverlay] = useState(null);
   const [flashQuestId, setFlashQuestId] = useState(null);
 
-  const [state, rawDispatch] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return { ...defaultState, ...JSON.parse(saved), _notification: null };
-    } catch {}
-    return defaultState;
-  });
+  const [state, rawDispatch] = useState(() => loadSavedState());
 
   const dispatch = useCallback((action) => {
     rawDispatch(prev => {
