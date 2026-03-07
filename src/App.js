@@ -15,7 +15,7 @@ function loadSavedState() {
       const legacy = localStorage.getItem(key);
       if (legacy) {
         const parsed = JSON.parse(legacy);
-        const migrated = { ...defaultState, ...parsed, activeTrees: parsed.activeTrees || [], treeProgress: parsed.treeProgress || {}, xpLog: parsed.xpLog || [], questsCompleted: parsed.questsCompleted || 0, weeklyResetDate: parsed.weeklyResetDate || null, _notification: null };
+        const migrated = { ...defaultState, ...parsed, activeTrees: parsed.activeTrees || [], treeProgress: parsed.treeProgress || {}, treeChallenges: parsed.treeChallenges || [], xpLog: parsed.xpLog || [], questsCompleted: parsed.questsCompleted || 0, weeklyResetDate: parsed.weeklyResetDate || null, _notification: null };
         // Save under new key immediately
         try { const { _notification, ...toSave } = migrated; localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave)); } catch {}
         return migrated;
@@ -134,6 +134,296 @@ const GENERIC_CHALLENGES = [
   { id: 3, title: "Monarch's Trial", rank: "A", desc: "The System itself watches. Only the worthy survive.", daysToComplete: 30, expReward: 120000, penalty: 8, startedAt: null, deadlineAt: null, failed: false, completed: false, tasks: [{ id: 1, title: "Run a half marathon (21km)", done: false }, { id: 2, title: "Study for 60 hours total", done: false }, { id: 3, title: "Zero junk food for 30 days", done: false }, { id: 4, title: "Cold showers every day for 30 days", done: false }, { id: 5, title: "Wake up before 6AM every day", done: false }, { id: 6, title: "Read 3 books", done: false }] },
 ];
 
+
+// ─── Tree Challenges ──────────────────────────────────────────────────────────
+// Unlocked based on tree progress: D=0%, C=33%, B=66%, A=100%
+const TREE_CHALLENGES = {
+  Body: [
+    { id: "body_ch_d", rank: "D", title: "First Blood", daysToComplete: 7, expReward: 2500, penalty: 2,
+      desc: "Prove your body is waking up. One week of physical commitment.",
+      tasks: [
+        { id: 1, title: "Run 3km without stopping", done: false },
+        { id: 2, title: "Complete 100 push-ups in a single day", done: false },
+        { id: 3, title: "Exercise every day for 7 consecutive days", done: false },
+        { id: 4, title: "Hold a 1-minute plank", done: false },
+        { id: 5, title: "Stretch or cool down after every session this week", done: false },
+      ]},
+    { id: "body_ch_c", rank: "C", title: "Iron Week", daysToComplete: 14, expReward: 10000, penalty: 3,
+      desc: "Two weeks that separates those who train from those who talk about it.",
+      tasks: [
+        { id: 1, title: "Run 5km three times this week", done: false },
+        { id: 2, title: "Complete 500 push-ups total this week", done: false },
+        { id: 3, title: "Train every single day for 14 days", done: false },
+        { id: 4, title: "Cold shower every morning for 14 days", done: false },
+        { id: 5, title: "Zero junk food for 14 days", done: false },
+        { id: 6, title: "Sleep 7+ hours every night for 14 days", done: false },
+      ]},
+    { id: "body_ch_b", rank: "B", title: "The Long Run", daysToComplete: 21, expReward: 35000, penalty: 5,
+      desc: "21 days. Your body will never be the same.",
+      tasks: [
+        { id: 1, title: "Run a half marathon (21.1km)", done: false },
+        { id: 2, title: "Complete 2000 push-ups total", done: false },
+        { id: 3, title: "Train twice a day for 5 consecutive days", done: false },
+        { id: 4, title: "Run 80km total across the 21 days", done: false },
+        { id: 5, title: "No rest days — active every single day", done: false },
+        { id: 6, title: "Perfect nutrition — zero processed food for 21 days", done: false },
+        { id: 7, title: "Document every single session", done: false },
+      ]},
+    { id: "body_ch_a", rank: "A", title: "Shadow Runner", daysToComplete: 30, expReward: 100000, penalty: 8,
+      desc: "A full month at elite level. Most will never attempt this.",
+      tasks: [
+        { id: 1, title: "Complete a full marathon (42.2km)", done: false },
+        { id: 2, title: "Run 150km total this month", done: false },
+        { id: 3, title: "Complete 5000 push-ups total this month", done: false },
+        { id: 4, title: "Train every single day for 30 days", done: false },
+        { id: 5, title: "Sub-25 min 5km run", done: false },
+        { id: 6, title: "Zero alcohol, zero junk food for 30 days", done: false },
+        { id: 7, title: "Sleep 7–8 hours every night for 30 days", done: false },
+        { id: 8, title: "Cold shower every morning for 30 days", done: false },
+      ]},
+  ],
+  Mind: [
+    { id: "mind_ch_d", rank: "D", title: "The First Page", daysToComplete: 7, expReward: 2500, penalty: 2,
+      desc: "Seven days of deliberate mental engagement.",
+      tasks: [
+        { id: 1, title: "Read for 30 minutes every day for 7 days", done: false },
+        { id: 2, title: "No phone for first hour of every morning", done: false },
+        { id: 3, title: "Write a journal entry every night", done: false },
+        { id: 4, title: "Finish 50 pages of a non-fiction book", done: false },
+        { id: 5, title: "Study one new topic for 2+ hours total", done: false },
+      ]},
+    { id: "mind_ch_c", rank: "C", title: "Deep Focus Fortnight", daysToComplete: 14, expReward: 10000, penalty: 3,
+      desc: "14 days of building a mind that can do real work.",
+      tasks: [
+        { id: 1, title: "2 hours of uninterrupted study every day for 14 days", done: false },
+        { id: 2, title: "Finish one complete book", done: false },
+        { id: 3, title: "Zero social media for 14 days", done: false },
+        { id: 4, title: "Meditate every morning for 14 days", done: false },
+        { id: 5, title: "Write a 500-word essay on something you learned", done: false },
+        { id: 6, title: "Teach someone one thing you learned this week", done: false },
+      ]},
+    { id: "mind_ch_b", rank: "B", title: "Scholar's Month", daysToComplete: 21, expReward: 35000, penalty: 5,
+      desc: "Three weeks of sustained mental output.",
+      tasks: [
+        { id: 1, title: "Study 4 hours every day for 21 days", done: false },
+        { id: 2, title: "Read 3 full books", done: false },
+        { id: 3, title: "Write a 2000-word analysis or essay", done: false },
+        { id: 4, title: "Zero entertainment — no TV, games, or social media for 21 days", done: false },
+        { id: 5, title: "Daily journaling for 21 consecutive days", done: false },
+        { id: 6, title: "Complete one structured course or certification module", done: false },
+        { id: 7, title: "Sleep before midnight every night", done: false },
+      ]},
+    { id: "mind_ch_a", rank: "A", title: "Philosopher's Trial", daysToComplete: 30, expReward: 100000, penalty: 8,
+      desc: "30 days of elite mental discipline. Your mind becomes your greatest weapon.",
+      tasks: [
+        { id: 1, title: "Study 5+ hours every day for 30 days", done: false },
+        { id: 2, title: "Read 5 books total", done: false },
+        { id: 3, title: "Write and publish or share a long-form piece of work", done: false },
+        { id: 4, title: "Zero social media for 30 days", done: false },
+        { id: 5, title: "Mentor or teach someone over multiple sessions", done: false },
+        { id: 6, title: "Build a personal knowledge system with 50+ notes", done: false },
+        { id: 7, title: "Complete a major project using only your knowledge", done: false },
+        { id: 8, title: "Meditate every single morning for 30 days", done: false },
+      ]},
+  ],
+  Discipline: [
+    { id: "disc_ch_d", rank: "D", title: "The Baseline", daysToComplete: 7, expReward: 2500, penalty: 2,
+      desc: "Seven days of showing up no matter what.",
+      tasks: [
+        { id: 1, title: "Wake up at the same time every day for 7 days", done: false },
+        { id: 2, title: "Cold shower every morning for 7 days", done: false },
+        { id: 3, title: "No junk food for 7 days", done: false },
+        { id: 4, title: "Complete your planned tasks every day", done: false },
+        { id: 5, title: "In bed before 11PM every night", done: false },
+      ]},
+    { id: "disc_ch_c", rank: "C", title: "Iron Habits", daysToComplete: 14, expReward: 10000, penalty: 3,
+      desc: "14 days stripping comfort and replacing it with standards.",
+      tasks: [
+        { id: 1, title: "Cold shower every day for 14 days", done: false },
+        { id: 2, title: "Zero social media for 14 days", done: false },
+        { id: 3, title: "Wake up before 6AM every day for 14 days", done: false },
+        { id: 4, title: "No alcohol for 14 days", done: false },
+        { id: 5, title: "Write tomorrow's plan every night for 14 days", done: false },
+        { id: 6, title: "Meditate every morning for 14 days", done: false },
+      ]},
+    { id: "disc_ch_b", rank: "B", title: "Ascetic Protocol", daysToComplete: 21, expReward: 35000, penalty: 5,
+      desc: "21 days of absolute self-control. No excuses. No exceptions.",
+      tasks: [
+        { id: 1, title: "Wake up before 5:30AM every single day", done: false },
+        { id: 2, title: "Cold shower every morning for 21 days", done: false },
+        { id: 3, title: "Zero entertainment — no TV, games, or social for 21 days", done: false },
+        { id: 4, title: "No sugar, no alcohol, no junk food for 21 days", done: false },
+        { id: 5, title: "Complete every planned task every day for 21 days", done: false },
+        { id: 6, title: "Meditate 20 minutes every morning", done: false },
+        { id: 7, title: "Journal every single night for 21 days", done: false },
+      ]},
+    { id: "disc_ch_a", rank: "A", title: "Shadow Monk", daysToComplete: 30, expReward: 100000, penalty: 8,
+      desc: "30 days of living like a monk. Your willpower becomes unbreakable.",
+      tasks: [
+        { id: 1, title: "Wake up before 5AM every single day for 30 days", done: false },
+        { id: 2, title: "Cold shower every morning for 30 days", done: false },
+        { id: 3, title: "Zero social media for 30 days", done: false },
+        { id: 4, title: "Perfect diet — zero processed food for 30 days", done: false },
+        { id: 5, title: "No phone for first 2 hours of every day", done: false },
+        { id: 6, title: "Never miss a single planned habit for 30 days", done: false },
+        { id: 7, title: "Meditate 30 minutes every morning", done: false },
+        { id: 8, title: "Journal every single night", done: false },
+      ]},
+  ],
+  Craft: [
+    { id: "craft_ch_d", rank: "D", title: "Show Up", daysToComplete: 7, expReward: 2500, penalty: 2,
+      desc: "Seven days proving consistency is more powerful than talent.",
+      tasks: [
+        { id: 1, title: "Practice your craft every day for 7 days", done: false },
+        { id: 2, title: "Spend at least 1 hour on your craft daily", done: false },
+        { id: 3, title: "Complete one small finished piece", done: false },
+        { id: 4, title: "Study one master in your field for 1 hour", done: false },
+        { id: 5, title: "Share your work with one person and get feedback", done: false },
+      ]},
+    { id: "craft_ch_c", rank: "C", title: "The Grind", daysToComplete: 14, expReward: 10000, penalty: 3,
+      desc: "14 days of deliberate, focused practice.",
+      tasks: [
+        { id: 1, title: "Practice 2 hours every day for 14 days", done: false },
+        { id: 2, title: "Complete one intermediate-level project", done: false },
+        { id: 3, title: "Identify your weakest area and work on it specifically for 5 hours", done: false },
+        { id: 4, title: "Study and analyze 3 works by masters in your field", done: false },
+        { id: 5, title: "Reach 100 total hours of deliberate practice", done: false },
+        { id: 6, title: "Teach a beginner concept in your field", done: false },
+      ]},
+    { id: "craft_ch_b", rank: "B", title: "Master's Forge", daysToComplete: 21, expReward: 35000, penalty: 5,
+      desc: "21 days of serious creative output. Build your body of work.",
+      tasks: [
+        { id: 1, title: "Practice 3 hours every day for 21 days", done: false },
+        { id: 2, title: "Complete a complex multi-part project", done: false },
+        { id: 3, title: "Produce work and get feedback from someone skilled", done: false },
+        { id: 4, title: "Reach 500 total hours of deliberate practice", done: false },
+        { id: 5, title: "Finish 3 complete pieces this month", done: false },
+        { id: 6, title: "Document your process — notes, sketches, drafts", done: false },
+        { id: 7, title: "Zero passive entertainment — only active creation", done: false },
+      ]},
+    { id: "craft_ch_a", rank: "A", title: "The Masterwork", daysToComplete: 30, expReward: 100000, penalty: 8,
+      desc: "30 days. Create something you're genuinely proud of.",
+      tasks: [
+        { id: 1, title: "Complete your best work to date — a true masterpiece", done: false },
+        { id: 2, title: "Practice 4 hours every day for 30 days", done: false },
+        { id: 3, title: "Reach 1000 total hours of deliberate practice", done: false },
+        { id: 4, title: "Share your masterwork publicly", done: false },
+        { id: 5, title: "Build a body of 10+ finished pieces", done: false },
+        { id: 6, title: "Receive recognition from a skilled audience", done: false },
+        { id: 7, title: "Mentor one person in your craft", done: false },
+        { id: 8, title: "Zero days missed — practice every single day", done: false },
+      ]},
+  ],
+  Finance: [
+    { id: "fin_ch_d", rank: "D", title: "Budget Week", daysToComplete: 7, expReward: 2500, penalty: 2,
+      desc: "Seven days of financial awareness.",
+      tasks: [
+        { id: 1, title: "Track every single expense for 7 days", done: false },
+        { id: 2, title: "Cut one unnecessary subscription or expense", done: false },
+        { id: 3, title: "Zero impulse purchases for 7 days", done: false },
+        { id: 4, title: "Calculate your exact net worth", done: false },
+        { id: 5, title: "Read one chapter of a personal finance book", done: false },
+      ]},
+    { id: "fin_ch_c", rank: "C", title: "The Foundation", daysToComplete: 14, expReward: 10000, penalty: 3,
+      desc: "14 days of building real financial discipline.",
+      tasks: [
+        { id: 1, title: "Track every expense for 14 days", done: false },
+        { id: 2, title: "Save a meaningful amount this month", done: false },
+        { id: 3, title: "Zero unnecessary spending for 14 days", done: false },
+        { id: 4, title: "Read one personal finance book completely", done: false },
+        { id: 5, title: "Create a 6-month financial plan", done: false },
+        { id: 6, title: "Research and open an investment account", done: false },
+      ]},
+    { id: "fin_ch_b", rank: "B", title: "Wealth Builder Sprint", daysToComplete: 21, expReward: 35000, penalty: 5,
+      desc: "21 days of aggressive financial moves.",
+      tasks: [
+        { id: 1, title: "Generate income outside your main job", done: false },
+        { id: 2, title: "Invest consistently — put money to work this week", done: false },
+        { id: 3, title: "Eliminate one category of debt", done: false },
+        { id: 4, title: "Read 2 books on wealth building", done: false },
+        { id: 5, title: "Build or expand a side income stream", done: false },
+        { id: 6, title: "Zero lifestyle inflation — live below your means", done: false },
+        { id: 7, title: "Write a 1-year financial roadmap with specific targets", done: false },
+      ]},
+    { id: "fin_ch_a", rank: "A", title: "The Architect", daysToComplete: 30, expReward: 100000, penalty: 8,
+      desc: "30 days of building real, lasting financial power.",
+      tasks: [
+        { id: 1, title: "Build or significantly grow a passive income source", done: false },
+        { id: 2, title: "Invest every single week for 30 days", done: false },
+        { id: 3, title: "Reach a significant net worth milestone", done: false },
+        { id: 4, title: "Create a system that generates income without daily labor", done: false },
+        { id: 5, title: "Read 3 books on investing or wealth creation", done: false },
+        { id: 6, title: "Zero impulse purchases for 30 days", done: false },
+        { id: 7, title: "Diversify into a new asset class", done: false },
+        { id: 8, title: "Document your complete financial system", done: false },
+      ]},
+  ],
+  Social: [
+    { id: "soc_ch_d", rank: "D", title: "Open Up", daysToComplete: 7, expReward: 2500, penalty: 2,
+      desc: "Seven days of intentional connection.",
+      tasks: [
+        { id: 1, title: "Start a conversation with one stranger", done: false },
+        { id: 2, title: "Reach out to 3 people you haven't talked to in months", done: false },
+        { id: 3, title: "Attend one social event outside your comfort zone", done: false },
+        { id: 4, title: "Have one deep 1-hour conversation with no phones", done: false },
+        { id: 5, title: "Give genuine, specific compliments to 5 different people", done: false },
+      ]},
+    { id: "soc_ch_c", rank: "C", title: "Network Effect", daysToComplete: 14, expReward: 10000, penalty: 3,
+      desc: "14 days of deliberate relationship building.",
+      tasks: [
+        { id: 1, title: "Have a difficult conversation you've been avoiding", done: false },
+        { id: 2, title: "Meet 5 new people and follow up with all of them", done: false },
+        { id: 3, title: "Give a short speech or presentation to any group", done: false },
+        { id: 4, title: "Help someone with something meaningful — no expectation", done: false },
+        { id: 5, title: "Resolve one ongoing conflict or tension", done: false },
+        { id: 6, title: "Spend quality time with 10 different people this week", done: false },
+      ]},
+    { id: "soc_ch_b", rank: "B", title: "The Influencer", daysToComplete: 21, expReward: 35000, penalty: 5,
+      desc: "21 days of building real influence and impact.",
+      tasks: [
+        { id: 1, title: "Lead a team or group to complete a real goal", done: false },
+        { id: 2, title: "Build or grow an audience — online or offline", done: false },
+        { id: 3, title: "Mentor someone through a real challenge over 3+ sessions", done: false },
+        { id: 4, title: "Speak publicly to a group of 20+ people", done: false },
+        { id: 5, title: "Create content or a message that reaches 100+ people", done: false },
+        { id: 6, title: "Build a reputation in one specific community", done: false },
+        { id: 7, title: "Make 10 warm introductions that add value to both parties", done: false },
+      ]},
+    { id: "soc_ch_a", rank: "A", title: "The Leader", daysToComplete: 30, expReward: 100000, penalty: 8,
+      desc: "30 days of leading, building, and creating lasting impact.",
+      tasks: [
+        { id: 1, title: "Build and lead a team to a major achievement", done: false },
+        { id: 2, title: "Speak to an audience of 100+ people", done: false },
+        { id: 3, title: "Build a community or organization from scratch", done: false },
+        { id: 4, title: "Create something that impacts 1000+ people", done: false },
+        { id: 5, title: "Develop someone who surpasses where you started", done: false },
+        { id: 6, title: "Make a decision that positively affects 50+ people", done: false },
+        { id: 7, title: "Build an audience or following of 500+ engaged people", done: false },
+        { id: 8, title: "Sustain daily relationship-building habits for 30 days", done: false },
+      ]},
+  ],
+};
+
+function getTreeProgress(treeKey, treeProgress) {
+  const tree = SKILL_TREES[treeKey];
+  const prog = (treeProgress || {})[treeKey] || {};
+  const totalSteps = tree.skills.reduce((a, s) => a + s.steps.length, 0);
+  const doneSteps = tree.skills.reduce((a, s) => a + s.steps.filter((_, i) => prog[s.id + "_" + i]).length, 0);
+  return totalSteps > 0 ? doneSteps / totalSteps : 0;
+}
+
+function getAvailableTreeChallenges(treeKey, treeProgress, savedChallenges) {
+  const pct = getTreeProgress(treeKey, treeProgress);
+  const pool = TREE_CHALLENGES[treeKey] || [];
+  const RANK_UNLOCK = { D: 0, C: 0.33, B: 0.66, A: 1.0 };
+  return pool
+    .filter(c => pct >= RANK_UNLOCK[c.rank])
+    .map(c => {
+      const saved = (savedChallenges || []).find(s => s.id === c.id);
+      return saved ? { ...c, ...saved, treeKey } : { ...c, treeKey, startedAt: null, deadlineAt: null, failed: false, completed: false, tasks: c.tasks.map(t => ({ ...t, done: false })) };
+    });
+}
+
 // ─── Default State ────────────────────────────────────────────────────────────
 const defaultState = {
   hunter: { name: "Hunter", class: "Fighter" },
@@ -182,6 +472,7 @@ const defaultState = {
   weeklyResetDate: null,
   activeTrees: [],
   treeProgress: {},
+  treeChallenges: [],
 };
 
 // ─── Colors ───────────────────────────────────────────────────────────────────
@@ -909,7 +1200,18 @@ function SkillsTab({ state, dispatch }) {
                   {isActive ? (
                     <>
                       <button onClick={() => { setSelectedTree(key); setView("detail"); }} style={{ ...G.btnSuccess, borderColor: `${tree.color}44`, color: tree.color, background: `${tree.color}12`, flex: 1 }}>Open Tree</button>
-                      <button onClick={() => dispatch({ type: "DEACTIVATE_TREE", key })} style={{ ...G.btn, padding: "8px 12px", color: "#ff453a", borderColor: "rgba(255,69,58,0.2)", background: "rgba(255,69,58,0.05)", fontSize: 9 }}>Swap</button>
+                      {(() => {
+                        const treeProg2 = treeProgress[key] || {};
+                        const ts = tree.skills.reduce((a,s) => a + s.steps.length, 0);
+                        const ds = tree.skills.reduce((a,s) => a + s.steps.filter((_,i) => treeProg2[s.id+"_"+i]).length, 0);
+                        const pct2 = ts > 0 ? ds / ts : 0;
+                        const safe = pct2 >= 0.66;
+                        return (
+                          <button onClick={() => dispatch({ type: "DEACTIVATE_TREE", key })} style={{ ...G.btn, padding: "8px 12px", color: safe ? "#ff9500" : "#ff453a", borderColor: safe ? "rgba(255,149,0,0.25)" : "rgba(255,69,58,0.2)", background: safe ? "rgba(255,149,0,0.06)" : "rgba(255,69,58,0.05)", fontSize: 9 }} title={safe ? "Progress will be saved" : "Progress will be lost"}>
+                            {safe ? "Swap ✓" : "Swap"}
+                          </button>
+                        );
+                      })()}
                     </>
                   ) : (
                     <button onClick={() => { if (canAdd) dispatch({ type: "ACTIVATE_TREE", key }); }} style={{ ...G.btn, flex: 1, borderColor: canAdd ? `${tree.color}44` : "rgba(60,60,80,0.3)", color: canAdd ? tree.color : "#3a3a5a", background: canAdd ? `${tree.color}0d` : "transparent", cursor: canAdd ? "pointer" : "default", fontSize: 9 }}>
@@ -1084,6 +1386,25 @@ function StatsTab({ state }) {
   const level = state.level;
   const totalExp = state.totalExp || 0;
   const questsCompleted = state.questsCompleted || 0;
+  const activeTrees = state.activeTrees || [];
+  const treeProgress = state.treeProgress || {};
+
+  // Skill tree stats
+  const totalStepsAll = activeTrees.reduce((a, key) => {
+    const tree = SKILL_TREES[key];
+    return a + tree.skills.reduce((b, s) => b + s.steps.length, 0);
+  }, 0);
+  const doneStepsAll = activeTrees.reduce((a, key) => {
+    const tree = SKILL_TREES[key];
+    const prog = treeProgress[key] || {};
+    return a + tree.skills.reduce((b, s) => b + s.steps.filter((_, i) => prog[s.id + "_" + i]).length, 0);
+  }, 0);
+  const masteredSkillsAll = activeTrees.reduce((a, key) => {
+    const tree = SKILL_TREES[key];
+    const prog = treeProgress[key] || {};
+    return a + tree.skills.filter(s => s.steps.every((_, i) => prog[s.id + "_" + i])).length;
+  }, 0);
+  const totalSkillsAll = activeTrees.reduce((a, key) => a + SKILL_TREES[key].skills.length, 0);
 
   // Build last 14 days
   const last14 = Array.from({ length: 14 }, (_, i) => {
@@ -1113,6 +1434,8 @@ function StatsTab({ state }) {
           { label: "Total EXP", value: totalExp >= 1000000 ? (totalExp / 1000000).toFixed(1) + "M" : totalExp >= 1000 ? (totalExp / 1000).toFixed(1) + "K" : totalExp, color: "#64d2ff" },
           { label: "Level", value: level, color: RANK_COLOR[rankFromLevel(level)] },
           { label: "Best Streak", value: `${state.longestStreak || 0}d`, color: "#ff9500" },
+          { label: "Skills Mastered", value: `${masteredSkillsAll}/${totalSkillsAll || "—"}`, color: "#bf5af2" },
+          { label: "Steps Done", value: `${doneStepsAll}/${totalStepsAll || "—"}`, color: "#30d158" },
         ].map(({ label, value, color }) => (
           <div key={label} style={{ ...G.card, padding: "18px 14px", textAlign: "center", marginBottom: 0 }}>
             <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 24, fontWeight: 700, color, marginBottom: 6 }}>{value}</div>
@@ -1185,6 +1508,69 @@ function StatsTab({ state }) {
         })}
       </div>
 
+      {/* Skill Trees Summary Card */}
+      {activeTrees.length > 0 && (
+        <div style={G.card}>
+          <div style={G.sectionTitle}><span>◈</span> Skill Tree Overview</div>
+          {activeTrees.map(key => {
+            const tree = SKILL_TREES[key];
+            const prog = treeProgress[key] || {};
+            const totalSteps = tree.skills.reduce((a, s) => a + s.steps.length, 0);
+            const doneSteps = tree.skills.reduce((a, s) => a + s.steps.filter((_, i) => prog[s.id + "_" + i]).length, 0);
+            const mastered = tree.skills.filter(s => s.steps.every((_, i) => prog[s.id + "_" + i])).length;
+            const pct = totalSteps > 0 ? Math.round((doneSteps / totalSteps) * 100) : 0;
+            const currentSkill = tree.skills.find(s => !s.steps.every((_, i) => prog[s.id + "_" + i]));
+            const currentDone = currentSkill ? currentSkill.steps.filter((_, i) => prog[currentSkill.id + "_" + i]).length : 0;
+            return (
+              <div key={key} style={{ marginBottom: 18, paddingBottom: 18, borderBottom: "1px solid rgba(60,50,100,0.2)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                  <span style={{ fontSize: 18 }}>{tree.icon}</span>
+                  <span style={{ fontFamily: "'Cinzel', serif", fontSize: 14, color: tree.color, fontWeight: 600 }}>{key}</span>
+                  <span style={{ marginLeft: "auto", fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: tree.color }}>{pct}%</span>
+                </div>
+                {/* Steps bar */}
+                <div style={{ marginBottom: 8 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70" }}>
+                    <span>{doneSteps} / {totalSteps} STEPS</span>
+                    <span>{mastered} / {tree.skills.length} SKILLS MASTERED</span>
+                  </div>
+                  <div style={{ height: 5, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: pct + "%", background: "linear-gradient(90deg, " + tree.color + "88, " + tree.color + ")", borderRadius: 999, boxShadow: "0 0 8px " + tree.color + "44", transition: "width 0.4s" }} />
+                  </div>
+                </div>
+                {/* Skill chain dots */}
+                <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: currentSkill ? 8 : 0 }}>
+                  {tree.skills.map((skill, idx) => {
+                    const done = skill.steps.filter((_, i) => prog[skill.id + "_" + i]).length;
+                    const complete = done === skill.steps.length;
+                    const isCurr = skill === currentSkill;
+                    const locked = idx > 0 && !tree.skills[idx-1].steps.every((_, i) => prog[tree.skills[idx-1].id + "_" + i]);
+                    return (
+                      <div key={skill.id} style={{ display: "flex", alignItems: "center", gap: 4, flex: 1 }}>
+                        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
+                          <div style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid " + (complete ? tree.color : isCurr ? tree.color + "77" : "rgba(60,60,80,0.4)"), background: complete ? tree.color + "25" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: complete ? 12 : 9, color: complete ? tree.color : isCurr ? tree.color + "aa" : "#3a3a5a" }}>
+                            {complete ? "✓" : locked ? "🔒" : <span style={{ fontFamily: "'Orbitron', sans-serif" }}>{done}</span>}
+                          </div>
+                          <div style={{ fontFamily: "'Cinzel', serif", fontSize: 8, color: complete ? tree.color : isCurr ? "#cdd6f4" : "#2a2a3a", textAlign: "center", lineHeight: 1.3 }}>{skill.name}</div>
+                        </div>
+                        {idx < tree.skills.length - 1 && <div style={{ width: 16, height: 1, background: complete ? tree.color + "66" : "rgba(60,60,80,0.3)", flexShrink: 0 }} />}
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* Current active step */}
+                {currentSkill && (
+                  <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(255,255,255,0.02)", border: "1px solid " + tree.color + "18" }}>
+                    <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70", letterSpacing: 1, marginBottom: 3 }}>CURRENT — {currentSkill.name} step {currentDone + 1}/10</div>
+                    <div style={{ fontSize: 12, color: "#7a8aaa", fontFamily: "'Rajdhani', sans-serif" }}>{currentSkill.steps[currentDone]}</div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {/* Skill Trees Stats */}
       <div style={G.card}>
         <div style={G.sectionTitle}><span>◈</span> Skill Trees</div>
@@ -1251,91 +1637,208 @@ function StatsTab({ state }) {
 
 // ─── Challenges Tab ───────────────────────────────────────────────────────────
 function ChallengesTab({ state, dispatch }) {
+  const [confirmChallenge, setConfirmChallenge] = useState(null);
+  const activeTrees = state.activeTrees || [];
+  const treeProgress = state.treeProgress || {};
+  const savedTreeChallenges = state.treeChallenges || [];
   const profile = state.detectedProfile ? PROFILES[state.detectedProfile] : null;
-
-  const profilePool = profile ? (PROFILE_CHALLENGES[state.detectedProfile] || []).map(c => {
+  const profileChallenges = profile ? (PROFILE_CHALLENGES[state.detectedProfile] || []).map(c => {
     const saved = (state.profileChallenges || []).find(s => s.id === c.id);
-    return saved ? { ...c, ...saved } : c;
+    return saved ? { ...c, ...saved } : { ...c };
   }) : [];
 
-  const allChallenges = [...(state.challenges || []), ...profilePool];
-  const active    = allChallenges.filter(c => c.startedAt && !c.completed && !c.failed);
-  const available = allChallenges.filter(c => !c.startedAt && !c.completed && !c.failed);
-  const done      = allChallenges.filter(c => c.completed);
-  const failed    = allChallenges.filter(c => c.failed);
-
   function daysLeft(d) { return Math.ceil((new Date(d) - new Date()) / 86400000); }
+  function timePct(c) {
+    if (!c.startedAt || !c.deadlineAt) return 0;
+    const total = new Date(c.deadlineAt) - new Date(c.startedAt);
+    const elapsed = new Date() - new Date(c.startedAt);
+    return Math.min(100, Math.max(0, (elapsed / total) * 100));
+  }
+  function taskPct(c) { return Math.round((c.tasks.filter(t => t.done).length / c.tasks.length) * 100); }
+  function isPaceBehind(c) { return timePct(c) > taskPct(c) + 20; }
+
+  // Confirm entry modal
+  if (confirmChallenge) {
+    const c = confirmChallenge;
+    const col = RANK_COLOR[c.rank];
+    return (
+      <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(2,1,15,0.96)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+        <div style={{ maxWidth: 480, width: "100%", background: "linear-gradient(135deg, rgba(20,10,50,0.98), rgba(8,4,24,0.99))", border: `1px solid ${col}44`, borderRadius: 16, padding: 32, boxShadow: `0 0 60px ${RANK_GLOW[c.rank]}` }}>
+          <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, letterSpacing: 4, color: col + "88", marginBottom: 8 }}>DUNGEON CONTRACT</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+            <RankBadge rank={c.rank} size={18} />
+            <div style={{ fontFamily: "'Cinzel', serif", fontSize: 22, color: "#e8d5ff", fontWeight: 700 }}>{c.title}</div>
+          </div>
+          <div style={{ fontSize: 13, color: "#5a6080", lineHeight: 1.7, marginBottom: 24 }}>{c.desc}</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 24 }}>
+            {[
+              { label: "REWARD", value: `+${c.expReward.toLocaleString()} XP`, color: "#a78bfa" },
+              { label: "PENALTY", value: `-${c.penalty} LEVELS`, color: "#ff453a" },
+              { label: "TIME LIMIT", value: `${c.daysToComplete} DAYS`, color: col },
+            ].map(({ label, value, color }) => (
+              <div key={label} style={{ background: "rgba(255,255,255,0.03)", borderRadius: 8, padding: "12px 10px", textAlign: "center", border: `1px solid ${color}22` }}>
+                <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 11, fontWeight: 700, color, marginBottom: 4 }}>{value}</div>
+                <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 7, color: "#3a3a5a", letterSpacing: 1 }}>{label}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginBottom: 20, padding: "12px 16px", borderRadius: 8, background: "rgba(255,69,58,0.08)", border: "1px solid rgba(255,69,58,0.2)" }}>
+            <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#ff453a", letterSpacing: 2, marginBottom: 8 }}>TASKS REQUIRED</div>
+            {c.tasks.map((t, i) => (
+              <div key={t.id} style={{ fontSize: 12, color: "#7a8aaa", fontFamily: "'Rajdhani', sans-serif", padding: "3px 0", borderBottom: i < c.tasks.length - 1 ? "1px solid rgba(255,69,58,0.1)" : "none" }}>
+                {i + 1}. {t.title}
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button onClick={() => setConfirmChallenge(null)} style={{ ...G.btn, flex: 1, color: "#4a5070", borderColor: "rgba(80,80,120,0.3)", background: "transparent" }}>Back Out</button>
+            <button onClick={() => { dispatch({ type: "START_CHALLENGE", id: c.id, daysToComplete: c.daysToComplete, isProfile: !!c.profile, isTree: !!c.treeKey, treeKey: c.treeKey }); setConfirmChallenge(null); }} style={{ ...G.btn, flex: 2, borderColor: `${col}55`, background: `${col}15`, color: col, fontWeight: 700 }}>
+              ⚔ Enter the Dungeon
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   function ChallengeCard({ c }) {
     const left = c.deadlineAt ? daysLeft(c.deadlineAt) : null;
     const isActive = c.startedAt && !c.completed && !c.failed;
     const urgent = left !== null && left <= 3 && isActive;
-    const progress = Math.round((c.tasks.filter(t => t.done).length / c.tasks.length) * 100);
+    const danger = isActive && isPaceBehind(c);
+    const tPct = taskPct(c);
+    const timP = isActive ? timePct(c) : 0;
+    const col = RANK_COLOR[c.rank];
+    const treeInfo = c.treeKey ? SKILL_TREES[c.treeKey] : null;
 
     return (
-      <div style={{ background: c.failed ? "rgba(255,45,58,0.04)" : c.completed ? "rgba(48,209,88,0.04)" : "rgba(10,8,30,0.7)", border: `1px solid ${c.failed ? "rgba(255,69,58,0.25)" : c.completed ? "rgba(48,209,88,0.2)" : urgent ? "rgba(255,149,0,0.3)" : RANK_COLOR[c.rank] + "22"}`, borderRadius: 12, padding: 20, marginBottom: 14, position: "relative", overflow: "hidden" }}>
+      <div style={{ background: c.failed ? "rgba(40,8,8,0.7)" : c.completed ? "rgba(8,30,16,0.7)" : danger ? "rgba(40,15,8,0.8)" : "rgba(10,8,30,0.75)", border: `1px solid ${c.failed ? "rgba(255,69,58,0.3)" : c.completed ? "rgba(48,209,88,0.25)" : danger ? "rgba(255,149,0,0.4)" : col + "28"}`, borderRadius: 12, padding: 20, marginBottom: 12, position: "relative", overflow: "hidden", animation: danger && isActive ? "dangerPulse 2s ease infinite" : "none" }}>
         {!c.failed && !c.completed && <div style={{ position: "absolute", top: 0, right: 0, width: 120, height: 120, background: `radial-gradient(circle at top right, ${RANK_GLOW[c.rank]}, transparent 70%)`, pointerEvents: "none" }} />}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
+
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 10 }}>
           <RankBadge rank={c.rank} size={13} />
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-              <span style={{ fontFamily: "'Cinzel', serif", fontSize: 15, fontWeight: 600, color: c.failed ? "#5a2a2a" : c.completed ? "#2a5a3a" : "#e8d5ff", textDecoration: c.failed ? "line-through" : "none" }}>{c.title}</span>
+              <span style={{ fontFamily: "'Cinzel', serif", fontSize: 15, fontWeight: 600, color: c.failed ? "#5a2020" : c.completed ? "#205a30" : "#e8d5ff", textDecoration: c.failed ? "line-through" : "none" }}>{c.title}</span>
+              {treeInfo && <span style={{ fontSize: 9, padding: "2px 8px", borderRadius: 10, background: `${treeInfo.color}15`, color: treeInfo.color, border: `1px solid ${treeInfo.color}30`, fontFamily: "'Orbitron', sans-serif" }}>{treeInfo.icon} {c.treeKey}</span>}
               {c.profile && profile && <span style={{ fontSize: 9, padding: "2px 8px", borderRadius: 10, background: `${profile.color}15`, color: profile.color, border: `1px solid ${profile.color}30`, fontFamily: "'Orbitron', sans-serif" }}>{profile.icon} {profile.label}</span>}
-              {c.completed && <span style={{ fontSize: 10, color: "#30d158", fontFamily: "'Orbitron', sans-serif" }}>CLEARED</span>}
-              {c.failed && <span style={{ fontSize: 10, color: "#ff453a", fontFamily: "'Orbitron', sans-serif" }}>FAILED</span>}
-              {urgent && <span style={{ fontSize: 9, color: "#ff9500", fontFamily: "'Orbitron', sans-serif" }}>⚠ {left}d LEFT</span>}
+              {c.completed && <span style={{ fontSize: 9, color: "#30d158", fontFamily: "'Orbitron', sans-serif", letterSpacing: 1 }}>✓ CLEARED</span>}
+              {c.failed && <span style={{ fontSize: 9, color: "#ff453a", fontFamily: "'Orbitron', sans-serif", letterSpacing: 1 }}>✗ FAILED</span>}
             </div>
             <div style={{ fontSize: 12, color: "#4a5070", marginBottom: 6 }}>{c.desc}</div>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
               <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#a78bfa" }}>+{c.expReward.toLocaleString()} XP</span>
-              <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#ff453a" }}>-{c.penalty} LVL if failed</span>
-              <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#4a5070" }}>{c.daysToComplete}d limit</span>
-              {isActive && left !== null && <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: left <= 3 ? "#ff9500" : "#30d158" }}>{left > 0 ? `${left}d remaining` : "DEADLINE PASSED"}</span>}
+              <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#ff453a" }}>-{c.penalty} lvl fail</span>
+              <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#4a5070" }}>{c.daysToComplete}d</span>
+              {isActive && left !== null && (
+                <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: urgent ? "#ff453a" : danger ? "#ff9500" : "#30d158" }}>
+                  {urgent ? `⚠ ${left}d LEFT` : `${left}d remaining`}
+                </span>
+              )}
             </div>
           </div>
         </div>
-        {(isActive || c.completed) && (
+
+        {/* Timeline bar — shows time elapsed vs task progress */}
+        {isActive && (
           <div style={{ marginBottom: 12 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5, fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70" }}>
-              <span>PROGRESS</span><span>{progress}% — {c.tasks.filter(t => t.done).length}/{c.tasks.length} tasks</span>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70" }}>
+              <span>TASKS {tPct}%</span>
+              <span style={{ color: danger ? "#ff9500" : "#4a4a70" }}>TIME {Math.round(timP)}%{danger ? " ⚠ BEHIND PACE" : ""}</span>
             </div>
-            <div style={{ height: 4, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${progress}%`, borderRadius: 999, background: c.completed ? "#30d158" : `linear-gradient(90deg, ${RANK_COLOR[c.rank]}88, ${RANK_COLOR[c.rank]})`, transition: "width 0.4s" }} />
+            {/* Task progress */}
+            <div style={{ position: "relative", height: 6, background: "rgba(255,255,255,0.05)", borderRadius: 999, overflow: "visible", marginBottom: 4 }}>
+              <div style={{ height: "100%", width: `${tPct}%`, background: `linear-gradient(90deg, ${col}88, ${col})`, borderRadius: 999, boxShadow: `0 0 6px ${col}55`, transition: "width 0.4s" }} />
+              {/* Time marker */}
+              <div style={{ position: "absolute", top: -3, left: `${timP}%`, width: 2, height: 12, background: danger ? "#ff9500" : "rgba(255,255,255,0.3)", borderRadius: 1, transform: "translateX(-1px)" }} />
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "'Orbitron', sans-serif", fontSize: 7, color: "#3a3a5a" }}>
+              <span>START</span><span>TODAY ↑</span><span>DEADLINE</span>
             </div>
           </div>
         )}
-        {isActive && c.tasks.map(t => (
-          <div key={t.id} onClick={() => dispatch({ type: "TOGGLE_TASK", challengeId: c.id, taskId: t.id, isProfile: !!c.profile })} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid rgba(40,40,60,0.4)", cursor: "pointer", opacity: t.done ? 0.45 : 1, transition: "opacity 0.2s" }}>
-            <div style={{ width: 16, height: 16, borderRadius: 4, flexShrink: 0, border: `1px solid ${t.done ? "#30d158" : "rgba(100,100,160,0.4)"}`, background: t.done ? "rgba(48,209,88,0.2)" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: "#30d158" }}>{t.done ? "✓" : ""}</div>
-            <span style={{ fontSize: 13, color: t.done ? "#3a5a3a" : "#cdd6f4", textDecoration: t.done ? "line-through" : "none", fontFamily: "'Rajdhani', sans-serif" }}>{t.title}</span>
+
+        {/* Failed autopsy */}
+        {c.failed && (
+          <div style={{ marginBottom: 12, padding: "10px 14px", borderRadius: 8, background: "rgba(255,69,58,0.07)", border: "1px solid rgba(255,69,58,0.2)" }}>
+            <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#ff453a", letterSpacing: 2, marginBottom: 6 }}>POST-MORTEM</div>
+            <div style={{ fontSize: 12, color: "#7a4040", fontFamily: "'Rajdhani', sans-serif", marginBottom: 4 }}>
+              Reached {taskPct(c)}% — {c.tasks.filter(t => t.done).length}/{c.tasks.length} tasks completed
+            </div>
+            <div style={{ fontSize: 11, color: "#5a3030", fontFamily: "'Rajdhani', sans-serif" }}>
+              Incomplete: {c.tasks.filter(t => !t.done).map(t => t.title).join(" · ")}
+            </div>
           </div>
-        ))}
-        <div style={{ display: "flex", gap: 8, marginTop: isActive ? 12 : 0 }}>
+        )}
+
+        {/* Completed summary */}
+        {c.completed && (
+          <div style={{ marginBottom: 12, padding: "10px 14px", borderRadius: 8, background: "rgba(48,209,88,0.07)", border: "1px solid rgba(48,209,88,0.15)" }}>
+            <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#30d158", letterSpacing: 2, marginBottom: 4 }}>DUNGEON CLEARED</div>
+            <div style={{ fontSize: 12, color: "#3a7a4a", fontFamily: "'Rajdhani', sans-serif" }}>All {c.tasks.length} tasks completed · +{c.expReward.toLocaleString()} XP earned</div>
+          </div>
+        )}
+
+        {/* Task checklist */}
+        {isActive && (
+          <div style={{ marginBottom: 12 }}>
+            {c.tasks.map((t, i) => (
+              <div key={t.id} onClick={() => dispatch({ type: "TOGGLE_TASK", challengeId: c.id, taskId: t.id, isProfile: !!c.profile, isTree: !!c.treeKey, treeKey: c.treeKey })} style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "8px 0", borderBottom: i < c.tasks.length - 1 ? "1px solid rgba(40,40,60,0.35)" : "none", cursor: "pointer", opacity: t.done ? 0.4 : 1, transition: "opacity 0.2s" }}>
+                <div style={{ width: 16, height: 16, borderRadius: 4, flexShrink: 0, marginTop: 2, border: `1px solid ${t.done ? col : "rgba(100,100,160,0.4)"}`, background: t.done ? col + "30" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, color: col }}>{t.done ? "✓" : ""}</div>
+                <span style={{ fontSize: 13, color: t.done ? "#3a4a5a" : "#cdd6f4", textDecoration: t.done ? "line-through" : "none", fontFamily: "'Rajdhani', sans-serif", lineHeight: 1.4 }}>{t.title}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div style={{ display: "flex", gap: 8 }}>
           {!c.startedAt && !c.completed && !c.failed && (
-            <button onClick={() => dispatch({ type: "START_CHALLENGE", id: c.id, daysToComplete: c.daysToComplete, isProfile: !!c.profile })} style={{ ...G.btn, borderColor: `${RANK_COLOR[c.rank]}44`, background: `${RANK_COLOR[c.rank]}10`, color: RANK_COLOR[c.rank] }}>⚔ Enter Dungeon</button>
+            <button onClick={() => setConfirmChallenge(c)} style={{ ...G.btn, borderColor: `${col}44`, background: `${col}10`, color: col }}>⚔ Enter Dungeon</button>
           )}
           {(c.failed || c.completed) && (
-            <button onClick={() => dispatch({ type: "RESTART_CHALLENGE", id: c.id, isProfile: !!c.profile })} style={{ ...G.btn, fontSize: 9 }}>↺ Retry</button>
+            <button onClick={() => dispatch({ type: "RESTART_CHALLENGE", id: c.id, isProfile: !!c.profile, isTree: !!c.treeKey, treeKey: c.treeKey })} style={{ ...G.btn, fontSize: 9 }}>↺ Retry</button>
           )}
         </div>
       </div>
     );
   }
 
-  const SectionLabel = ({ children }) => <div style={{ ...G.sectionTitle, marginTop: 4, marginBottom: 12 }}><span>◈</span> {children}</div>;
+  const noTrees = activeTrees.length === 0 && !profile;
+  const hasSomething = activeTrees.length > 0 || profile;
+
+  // Count all active/done/failed across everything
+  const allActive = [], allDone = [], allFailed = [];
+  activeTrees.forEach(key => {
+    getAvailableTreeChallenges(key, treeProgress, savedTreeChallenges).forEach(c => {
+      if (c.startedAt && !c.completed && !c.failed) allActive.push(c);
+      else if (c.completed) allDone.push(c);
+      else if (c.failed) allFailed.push(c);
+    });
+  });
+  profileChallenges.forEach(c => {
+    if (c.startedAt && !c.completed && !c.failed) allActive.push(c);
+    else if (c.completed) allDone.push(c);
+    else if (c.failed) allFailed.push(c);
+  });
 
   return (
     <div style={G.page}>
+      {/* Header */}
       <div style={{ ...G.card, background: "linear-gradient(135deg, rgba(30,10,10,0.9), rgba(10,5,30,0.95))", border: "1px solid rgba(255,45,85,0.14)", marginBottom: 24 }}>
         <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 10, color: "#5a2a2a", letterSpacing: 3, marginBottom: 6 }}>DUNGEON SYSTEM</div>
         <div style={{ fontFamily: "'Cinzel', serif", fontSize: 22, color: "#e8d5ff", marginBottom: 8 }}>Challenge Gates</div>
         <div style={{ fontSize: 13, color: "#4a3a4a", lineHeight: 1.6, marginBottom: 12 }}>
-          Timed dungeons with real objectives. Complete all tasks before the deadline or lose levels.
-          {profile && <span style={{ color: profile.color }}> Your <strong>{profile.label}</strong> profile unlocks exclusive dungeons.</span>}
+          Timed dungeons built around your active paths. Complete all tasks before the deadline or lose levels.
         </div>
-        {!state.detectedProfile && <div style={{ padding: "10px 14px", borderRadius: 8, background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.12)", fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#5a5a80", letterSpacing: 1 }}>◈ Complete quests to reveal your Hunter Profile — exclusive dungeons will unlock</div>}
+        {noTrees && (
+          <div style={{ padding: "12px 16px", borderRadius: 8, background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.15)", fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: "#5a5a80", letterSpacing: 1 }}>
+            ◈ Activate skill trees in the Skills tab to unlock your personal challenges
+          </div>
+        )}
         <div style={{ marginTop: 14, display: "flex", gap: 20 }}>
-          {[{ label: "Active", val: active.length, color: "#a78bfa" }, { label: "Cleared", val: done.length, color: "#30d158" }, { label: "Failed", val: failed.length, color: "#ff453a" }].map(({ label, val, color }) => (
+          {[{ label: "Active", val: allActive.length, color: "#a78bfa" }, { label: "Cleared", val: allDone.length, color: "#30d158" }, { label: "Failed", val: allFailed.length, color: "#ff453a" }].map(({ label, val, color }) => (
             <div key={label}>
               <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 18, fontWeight: 700, color }}>{val}</div>
               <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#3a3a5a", letterSpacing: 1 }}>{label}</div>
@@ -1343,10 +1846,58 @@ function ChallengesTab({ state, dispatch }) {
           ))}
         </div>
       </div>
-      {active.length > 0    && <><SectionLabel>Active Dungeons</SectionLabel>{active.map(c => <ChallengeCard key={c.id} c={c} />)}</>}
-      {available.length > 0 && <><SectionLabel>Available Dungeons</SectionLabel>{available.map(c => <ChallengeCard key={c.id} c={c} />)}</>}
-      {done.length > 0      && <><SectionLabel>Cleared</SectionLabel>{done.map(c => <ChallengeCard key={c.id} c={c} />)}</>}
-      {failed.length > 0    && <><SectionLabel>Failed</SectionLabel>{failed.map(c => <ChallengeCard key={c.id} c={c} />)}</>}
+
+      {/* Tree sections */}
+      {activeTrees.map(key => {
+        const tree = SKILL_TREES[key];
+        const pct = getTreeProgress(key, treeProgress);
+        const challenges = getAvailableTreeChallenges(key, treeProgress, savedTreeChallenges);
+        const active = challenges.filter(c => c.startedAt && !c.completed && !c.failed);
+        const available = challenges.filter(c => !c.startedAt && !c.completed && !c.failed);
+        const done = challenges.filter(c => c.completed);
+        const failed = challenges.filter(c => c.failed);
+        const RANK_UNLOCK = { D: 0, C: 0.33, B: 0.66, A: 1.0 };
+        const allRanks = ["D","C","B","A"];
+        return (
+          <div key={key} style={{ marginBottom: 28 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, paddingBottom: 12, borderBottom: `1px solid ${tree.color}22` }}>
+              <span style={{ fontSize: 22 }}>{tree.icon}</span>
+              <div>
+                <div style={{ fontFamily: "'Cinzel', serif", fontSize: 16, color: tree.color, fontWeight: 700 }}>{key} Dungeons</div>
+                <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 8, color: "#4a4a70", marginTop: 2 }}>
+                  {allRanks.map(r => {
+                    const unlocked = pct >= RANK_UNLOCK[r];
+                    return <span key={r} style={{ marginRight: 8, color: unlocked ? RANK_COLOR[r] : "#2a2a3a" }}>{r} {unlocked ? "✓" : `(${Math.round(RANK_UNLOCK[r]*100)}%)`}</span>;
+                  })}
+                </div>
+              </div>
+            </div>
+            {active.length > 0 && active.map(c => <ChallengeCard key={c.id} c={c} />)}
+            {available.map(c => <ChallengeCard key={c.id} c={c} />)}
+            {done.length > 0 && done.map(c => <ChallengeCard key={c.id} c={c} />)}
+            {failed.length > 0 && failed.map(c => <ChallengeCard key={c.id} c={c} />)}
+          </div>
+        );
+      })}
+
+      {/* Profile challenges */}
+      {profile && profileChallenges.length > 0 && (
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, paddingBottom: 12, borderBottom: `1px solid ${profile.color}22` }}>
+            <span style={{ fontSize: 22 }}>{profile.icon}</span>
+            <div style={{ fontFamily: "'Cinzel', serif", fontSize: 16, color: profile.color, fontWeight: 700 }}>{profile.label} Dungeons</div>
+          </div>
+          {profileChallenges.map(c => <ChallengeCard key={c.id} c={c} />)}
+        </div>
+      )}
+
+      {noTrees && (
+        <div style={{ textAlign: "center", padding: "60px 0" }}>
+          <div style={{ fontSize: 40, marginBottom: 16 }}>⚔️</div>
+          <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 11, color: "#2a2a40", letterSpacing: 3, marginBottom: 12 }}>NO DUNGEONS AVAILABLE</div>
+          <div style={{ fontSize: 13, color: "#3a3a5a", marginBottom: 20 }}>Activate skill trees in the Skills tab to generate your personal challenges.</div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1458,13 +2009,22 @@ function reducer(state, action) {
       const deadline = new Date(now);
       deadline.setDate(deadline.getDate() + action.daysToComplete);
       const patch = { startedAt: now.toISOString(), deadlineAt: deadline.toISOString() };
+      const msg = `⚔ Dungeon entered — ${action.daysToComplete} days. Do not fail.`;
       if (action.isProfile) {
         const existing = state.profileChallenges || [];
         const base = (PROFILE_CHALLENGES[state.detectedProfile] || []).find(c => c.id === action.id);
         const updated = existing.find(c => c.id === action.id) ? existing.map(c => c.id === action.id ? { ...c, ...patch } : c) : [...existing, { ...base, ...patch }];
-        return { ...state, profileChallenges: updated, _notification: `⚔ Dungeon entered — ${action.daysToComplete} days. Do not fail.` };
+        return { ...state, profileChallenges: updated, _notification: msg };
       }
-      return { ...state, challenges: state.challenges.map(c => c.id === action.id ? { ...c, ...patch } : c), _notification: `⚔ Dungeon entered — ${action.daysToComplete} days. Do not fail.` };
+      if (action.isTree) {
+        const existing = state.treeChallenges || [];
+        const base = (TREE_CHALLENGES[action.treeKey] || []).find(c => c.id === action.id);
+        if (!base) return state;
+        const fullBase = { ...base, treeKey: action.treeKey, tasks: base.tasks.map(t => ({ ...t, done: false })), failed: false, completed: false };
+        const updated = existing.find(c => c.id === action.id) ? existing.map(c => c.id === action.id ? { ...c, ...patch } : c) : [...existing, { ...fullBase, ...patch }];
+        return { ...state, treeChallenges: updated, _notification: msg };
+      }
+      return { ...state, challenges: (state.challenges || []).map(c => c.id === action.id ? { ...c, ...patch } : c), _notification: msg };
     }
 
     case "TOGGLE_TASK": {
@@ -1483,13 +2043,20 @@ function reducer(state, action) {
         const { list, completed, reward } = toggleIn(state.profileChallenges || [], fallback);
         if (!completed) return { ...state, profileChallenges: list };
         const { newExp, newLevel, bonusPoints, newSkills } = applyExp(state, reward);
-        return { ...state, exp: newExp, totalExp: (state.totalExp || 0) + reward, level: newLevel, statPoints: bonusPoints, skills: newSkills, profileChallenges: list, _notification: `🏆 CHALLENGE COMPLETE!  +${reward.toLocaleString()} XP` };
+        return { ...state, exp: newExp, totalExp: (state.totalExp || 0) + reward, level: newLevel, statPoints: bonusPoints, skills: newSkills, profileChallenges: list, _notification: `🏆 DUNGEON CLEARED!  +${reward.toLocaleString()} XP` };
+      }
+      if (action.isTree) {
+        const baseC = (TREE_CHALLENGES[action.treeKey] || []).find(c => c.id === action.challengeId);
+        const { list, completed, reward } = toggleIn(state.treeChallenges || [], baseC ? { ...baseC, treeKey: action.treeKey } : null);
+        if (!completed) return { ...state, treeChallenges: list };
+        const { newExp, newLevel, bonusPoints, newSkills } = applyExp(state, reward);
+        return { ...state, exp: newExp, totalExp: (state.totalExp || 0) + reward, level: newLevel, statPoints: bonusPoints, skills: newSkills, treeChallenges: list, _notification: `🏆 DUNGEON CLEARED!  +${reward.toLocaleString()} XP` };
       }
       const { list, completed, reward } = toggleIn(state.challenges || [], null);
       if (!completed) return { ...state, challenges: list };
-      const done = list.find(c => c.id === action.challengeId);
+      const doneC = list.find(c => c.id === action.challengeId);
       const { newExp, newLevel, bonusPoints, newSkills } = applyExp(state, reward);
-      return { ...state, exp: newExp, totalExp: (state.totalExp || 0) + reward, level: newLevel, statPoints: bonusPoints, skills: newSkills, challenges: list, _notification: `🏆 CHALLENGE COMPLETE: ${done?.title}  •  +${reward.toLocaleString()} XP` };
+      return { ...state, exp: newExp, totalExp: (state.totalExp || 0) + reward, level: newLevel, statPoints: bonusPoints, skills: newSkills, challenges: list, _notification: `🏆 DUNGEON CLEARED: ${doneC?.title}  •  +${reward.toLocaleString()} XP` };
     }
 
     case "CHECK_DEADLINES": {
@@ -1502,15 +2069,17 @@ function reducer(state, action) {
       });
       const challenges = check(state.challenges || []);
       const profileChallenges = check(state.profileChallenges || []);
-      if (penaltyLevels === 0) return { ...state, challenges, profileChallenges };
+      const treeChallenges = check(state.treeChallenges || []);
+      if (penaltyLevels === 0) return { ...state, challenges, profileChallenges, treeChallenges };
       const { newLevel, newSkills } = applyPenalty(state, penaltyLevels);
-      return { ...state, level: newLevel, exp: 0, skills: newSkills, challenges, profileChallenges, _notification: `💀 CHALLENGE FAILED — Level decreased by ${penaltyLevels}. Now Level ${newLevel}.` };
+      return { ...state, level: newLevel, exp: 0, skills: newSkills, challenges, profileChallenges, treeChallenges, _notification: `💀 CHALLENGE FAILED — Level decreased by ${penaltyLevels}. Now Level ${newLevel}.` };
     }
 
     case "RESTART_CHALLENGE": {
       const reset = c => c.id === action.id ? { ...c, startedAt: null, deadlineAt: null, failed: false, completed: false, tasks: c.tasks.map(t => ({ ...t, done: false })) } : c;
       if (action.isProfile) return { ...state, profileChallenges: (state.profileChallenges || []).map(reset) };
-      return { ...state, challenges: state.challenges.map(reset) };
+      if (action.isTree) return { ...state, treeChallenges: (state.treeChallenges || []).map(reset) };
+      return { ...state, challenges: (state.challenges || []).map(reset) };
     }
 
     case "ACTIVATE_TREE": {
@@ -1522,8 +2091,17 @@ function reducer(state, action) {
     case "DEACTIVATE_TREE": {
       const active = (state.activeTrees || []).filter(k => k !== action.key);
       const prog = { ...(state.treeProgress || {}) };
-      delete prog[action.key];
-      return { ...state, activeTrees: active, treeProgress: prog, _notification: `⚠ ${action.key} tree removed — progress cleared` };
+      const tree = SKILL_TREES[action.key];
+      const treeProg = prog[action.key] || {};
+      const totalSteps = tree.skills.reduce((a, s) => a + s.steps.length, 0);
+      const doneSteps = tree.skills.reduce((a, s) => a + s.steps.filter((_, i) => treeProg[s.id + "_" + i]).length, 0);
+      const pct = totalSteps > 0 ? doneSteps / totalSteps : 0;
+      const keepProgress = pct >= 0.66;
+      if (!keepProgress) delete prog[action.key];
+      const msg = keepProgress
+        ? `✓ ${action.key} tree deactivated — progress saved (>​66% reached)`
+        : `⚠ ${action.key} tree removed — progress cleared`;
+      return { ...state, activeTrees: active, treeProgress: prog, _notification: msg };
     }
 
     case "TOGGLE_SKILL_STEP": {
@@ -1641,6 +2219,7 @@ export default function App() {
         @keyframes questFlash { 0%,100% { box-shadow:none; } 45% { box-shadow:0 0 30px rgba(48,209,88,0.8), inset 0 0 10px rgba(48,209,88,0.1); } }
         @keyframes slideDown  { from { opacity:0; transform:translateY(-14px); } to { opacity:1; transform:translateY(0); } }
         @keyframes statPulse  { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
+        @keyframes dangerPulse { 0%,100% { border-color: rgba(255,149,0,0.4); box-shadow: none; } 50% { border-color: rgba(255,149,0,0.8); box-shadow: 0 0 20px rgba(255,149,0,0.2); } }
       `}</style>
 
       {rankUpOverlay  && <RankUpOverlay  rank={rankUpOverlay}   onDismiss={() => setRankUpOverlay(null)} />}
