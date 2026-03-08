@@ -1499,15 +1499,23 @@ function QuestsTab({ state, dispatch, flashQuestId }) {
 
       {/* Quest list */}
       {filtered.map(q => (
-        <div key={q.id} style={{ ...G.cardDark, opacity: q.done ? 0.45 : 1, borderColor: q.done ? "rgba(40,40,60,0.25)" : `${RANK_COLOR[q.difficulty]}22`, transition: "opacity 0.4s, border-color 0.3s", animation: flashQuestId === q.id ? "questFlash 0.65s ease" : "none" }}>
+        <div key={q.id} style={{ 
+          ...G.cardDark, 
+          opacity: q.done ? 0.35 : 1, 
+          borderColor: q.done ? "rgba(40,40,60,0.2)" : `${RANK_COLOR[q.difficulty]}44`, 
+          background: q.done ? "rgba(10,8,20,0.5)" : "rgba(15,12,30,0.85)",
+          transition: "opacity 0.4s, border-color 0.3s, background 0.3s", 
+          animation: flashQuestId === q.id ? "questFlash 0.65s ease" : "none",
+          boxShadow: q.done ? "none" : `0 0 15px ${RANK_COLOR[q.difficulty]}10`
+        }}>
           <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
             <RankBadge rank={q.difficulty} size={13} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                <span style={{ fontFamily: "'Cinzel', serif", fontSize: 14, fontWeight: 600, color: q.done ? "#3a3a5a" : "#cdd6f4", textDecoration: q.done ? "line-through" : "none" }}>{q.title}</span>
+                <span style={{ fontFamily: "'Cinzel', serif", fontSize: 15, fontWeight: q.done ? 400 : 600, color: q.done ? "#3a3a5a" : "#e8e8f0", textDecoration: q.done ? "line-through" : "none" }}>{q.title}</span>
                 <span style={{ fontSize: 9, padding: "2px 8px", borderRadius: 10, background: `${catColors[q.category] || "#a78bfa"}15`, color: catColors[q.category] || "#a78bfa", fontFamily: "'Orbitron', sans-serif", letterSpacing: 1, border: `1px solid ${catColors[q.category] || "#a78bfa"}30` }}>{q.category}</span>
               </div>
-              <div style={{ fontSize: 12, color: "#4a5070", marginBottom: 6 }}>{q.desc}</div>
+              <div style={{ fontSize: 12, color: q.done ? "#2a2a3a" : "#6a7090", marginBottom: 6 }}>{q.desc}</div>
               <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
                 <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 10, color: "#a78bfa" }}>
                   +{Math.floor(EXP_TABLE[q.difficulty] * streakMultiplier(state.streak || 0))} XP
@@ -3186,11 +3194,23 @@ function RoadmapsTab({ state, dispatch }) {
                   {day.tasks.map((task, taskIdx) => {
                     const isDone = dayProgress[taskIdx];
                     return (
-                      <div key={taskIdx} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 12px", borderRadius: 8, background: isDone ? "rgba(48,209,88,0.08)" : "rgba(255,255,255,0.02)", border: `1px solid ${isDone ? "rgba(48,209,88,0.2)" : "rgba(60,60,90,0.3)"}`, cursor: "pointer", transition: "all 0.2s" }} onClick={() => dispatch({ type: "TOGGLE_ROADMAP_TASK", roadmapId: selectedRoadmap, day: day.day, taskIndex: taskIdx })}>
-                        <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${isDone ? "#30d158" : roadmap.color}44`, background: isDone ? "#30d158" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
-                          {isDone && <span style={{ fontSize: 12, color: "#05050f" }}>✓</span>}
+                      <div key={taskIdx} style={{ 
+                        display: "flex", 
+                        alignItems: "flex-start", 
+                        gap: 12, 
+                        padding: "12px 14px", 
+                        borderRadius: 8, 
+                        background: isDone ? "rgba(48,209,88,0.03)" : "rgba(255,255,255,0.05)", 
+                        border: `1px solid ${isDone ? "rgba(48,209,88,0.12)" : roadmap.color + "55"}`, 
+                        cursor: "pointer", 
+                        transition: "all 0.3s",
+                        opacity: isDone ? 0.35 : 1,
+                        boxShadow: isDone ? "none" : `0 0 20px ${roadmap.color}15`
+                      }} onClick={() => dispatch({ type: "TOGGLE_ROADMAP_TASK", roadmapId: selectedRoadmap, day: day.day, taskIndex: taskIdx })}>
+                        <div style={{ width: 20, height: 20, borderRadius: 4, border: `2px solid ${isDone ? "#30d158" : roadmap.color}`, background: isDone ? "#30d158" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
+                          {isDone && <span style={{ fontSize: 13, color: "#05050f", fontWeight: 700 }}>✓</span>}
                         </div>
-                        <div style={{ fontSize: 13, color: isDone ? "#30d158" : "#cdd6f4", lineHeight: 1.5, textDecoration: isDone ? "line-through" : "none", flex: 1 }}>{task}</div>
+                        <div style={{ fontSize: 14, color: isDone ? "#3a3a5a" : "#e8e8f0", lineHeight: 1.6, textDecoration: isDone ? "line-through" : "none", flex: 1, fontWeight: isDone ? 400 : 500 }}>{task}</div>
                       </div>
                     );
                   })}
