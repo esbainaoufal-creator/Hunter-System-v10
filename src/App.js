@@ -645,147 +645,405 @@ const ROADMAPS = {
     title: "Quran Memorization",
     icon: "📿",
     color: "#00b894",
-    description: "1 year to memorize the entire Quran - systematic hifz starting from Juz 30",
-    days: (() => {
-      const days = [];
-      let dayCount = 1;
+    description: "1 year to complete Hifz - 1 page per day with strong revision",
+    days: [
+      // MONTH 1: JUZ 30 - Days 1-30
+      { day: 1, tasks: ["Memorize Al-Fatiha (7 ayat) after Fajr - repeat 50x", "Understand meaning of each ayah", "Recite in all 5 salah today"] },
+      { day: 2, tasks: ["Memorize An-Nas (6 ayat) + Al-Falaq (5 ayat)", "Review Al-Fatiha 20x", "Link all three surahs smoothly"] },
+      { day: 3, tasks: ["Memorize Al-Ikhlas (4 ayat) + Al-Masad (5 ayat)", "Review yesterday's surahs 15x", "Recite to someone for correction"] },
+      { day: 4, tasks: ["Memorize An-Nasr (3 ayat) + Al-Kafirun (6 ayat)", "Review last 2 days", "Perfect tajweed on all surahs so far"] },
+      { day: 5, tasks: ["Memorize Al-Kawthar (3 ayat) + Al-Ma'un (7 ayat)", "Review all 9 surahs from start", "Write first word of each ayah from memory"] },
+      { day: 6, tasks: ["Memorize Quraysh (4 ayat) + Al-Fil (5 ayat)", "Review last 3 days", "Recite in salah"] },
+      { day: 7, tasks: ["WEEKLY REVIEW - No new memorization", "Recite Al-Fatiha through Al-Fil completely", "Fix all mistakes with teacher"] },
+      { day: 8, tasks: ["Memorize Al-Humazah (9 ayat)", "Review week 1 surahs", "Focus on connecting ayat smoothly"] },
+      { day: 9, tasks: ["Memorize Al-'Asr (3 ayat) + At-Takathur (8 ayat)", "Review Al-Humazah 15x", "Understand deep meaning of Al-'Asr"] },
+      { day: 10, tasks: ["Memorize Al-Qari'ah (11 ayat) - first day", "Repeat each ayah 20x", "Review last 3 surahs"] },
+      { day: 11, tasks: ["Complete Al-Qari'ah review + Memorize Al-'Adiyat ayat 1-6", "Connect smoothly", "Review all week 2"] },
+      { day: 12, tasks: ["Complete Al-'Adiyat (ayat 7-11)", "Recite full surah 15x", "Review Az-Zalzalah preparation"] },
+      { day: 13, tasks: ["Memorize Az-Zalzalah (8 ayat)", "Review Al-'Adiyat + Al-Qari'ah", "Link last 5 surahs"] },
+      { day: 14, tasks: ["WEEKLY REVIEW", "Recite all memorized (18 surahs) 2x", "Record yourself, fix mistakes"] },
+      { day: 15, tasks: ["Memorize Al-Bayyinah ayat 1-4", "Review last week's surahs", "Maintain same mushaf"] },
+      { day: 16, tasks: ["Complete Al-Bayyinah (ayat 5-8)", "Recite full surah 12x", "Review Az-Zalzalah"] },
+      { day: 17, tasks: ["Memorize Al-Qadr (5 ayat) - Laylatul Qadr surah", "Repeat 40x due to importance", "Reflect on its meaning"] },
+      { day: 18, tasks: ["Memorize Al-'Alaq ayat 1-10 (first revelation)", "These are first ayat revealed", "Repeat 20x"] },
+      { day: 19, tasks: ["Complete Al-'Alaq (ayat 11-19)", "Connect both halves", "Review last 3 surahs"] },
+      { day: 20, tasks: ["Memorize At-Tin (8 ayat)", "Review Al-'Alaq completely", "Recite in salah"] },
+      { day: 21, tasks: ["WEEKLY REVIEW", "Recite Juz 30 progress completely", "Strengthen weakest 3 surahs"] },
+      { day: 22, tasks: ["Memorize Ash-Sharh (8 ayat)", "Review At-Tin 15x", "Understand relief after hardship message"] },
+      { day: 23, tasks: ["Memorize Ad-Duha (11 ayat)", "Review Ash-Sharh", "Feel the compassion in this surah"] },
+      { day: 24, tasks: ["Memorize Al-Layl ayat 1-11", "Repeat 18x", "Review last 3 surahs"] },
+      { day: 25, tasks: ["Complete Al-Layl (ayat 12-21)", "Connect full surah", "Review week 4 progress"] },
+      { day: 26, tasks: ["Memorize Ash-Shams ayat 1-8", "Perfect pronunciation", "Review Al-Layl"] },
+      { day: 27, tasks: ["Complete Ash-Shams (ayat 9-15)", "Recite complete 15x", "Review all week 4"] },
+      { day: 28, tasks: ["WEEKLY REVIEW", "Recite all Juz 30 memorized", "Note problem areas"] },
+      { day: 29, tasks: ["Memorize Al-Balad ayat 1-10", "Review last 5 surahs", "Maintain consistency"] },
+      { day: 30, tasks: ["MONTHLY REVIEW", "Complete Al-Balad (11-20) + review entire month", "Recite full Juz 30 from memory"] },
       
-      // Juz 30 - Short surahs (Days 1-45, ~7-10 ayat/day)
-      const juz30Surahs = [
-        { name: "An-Nas", ayat: 6 }, { name: "Al-Falaq", ayat: 5 }, { name: "Al-Ikhlas", ayat: 4 },
-        { name: "Al-Masad", ayat: 5 }, { name: "An-Nasr", ayat: 3 }, { name: "Al-Kafirun", ayat: 6 },
-        { name: "Al-Kawthar", ayat: 3 }, { name: "Al-Ma'un", ayat: 7 }, { name: "Quraysh", ayat: 4 },
-        { name: "Al-Fil", ayat: 5 }, { name: "Al-Humazah", ayat: 9 }, { name: "Al-'Asr", ayat: 3 },
-        { name: "At-Takathur", ayat: 8 }, { name: "Al-Qari'ah", ayat: 11 }, { name: "Al-'Adiyat", ayat: 11 },
-        { name: "Az-Zalzalah", ayat: 8 }, { name: "Al-Bayyinah", ayat: 8 }, { name: "Al-Qadr", ayat: 5 },
-        { name: "Al-'Alaq", ayat: 19 }, { name: "At-Tin", ayat: 8 }, { name: "Ash-Sharh", ayat: 8 },
-        { name: "Ad-Duha", ayat: 11 }, { name: "Al-Layl", ayat: 21 }, { name: "Ash-Shams", ayat: 15 },
-        { name: "Al-Balad", ayat: 20 }, { name: "Al-Fajr", ayat: 30 }, { name: "Al-Ghashiyah", ayat: 26 },
-        { name: "Al-A'la", ayat: 19 }, { name: "At-Tariq", ayat: 17 }, { name: "Al-Buruj", ayat: 22 },
-        { name: "Al-Inshiqaq", ayat: 25 }, { name: "Al-Mutaffifin", ayat: 36 }, { name: "Al-Infitar", ayat: 19 },
-        { name: "At-Takwir", ayat: 29 }, { name: "'Abasa", ayat: 42 }, { name: "An-Nazi'at", ayat: 46 },
-        { name: "An-Naba'", ayat: 40 }
-      ];
+      // MONTH 2: Complete Juz 30 + Start Juz 29 - Days 31-60
+      { day: 31, tasks: ["Memorize Al-Fajr ayat 1-15", "Review Al-Balad", "New month, renewed commitment"] },
+      { day: 32, tasks: ["Continue Al-Fajr ayat 16-30", "Connect both parts", "Review yesterday"] },
+      { day: 33, tasks: ["Memorize Al-Ghashiyah ayat 1-13", "Review Al-Fajr", "Visualize Day of Judgment"] },
+      { day: 34, tasks: ["Complete Al-Ghashiyah (ayat 14-26)", "Recite complete 12x", "Review both new surahs"] },
+      { day: 35, tasks: ["WEEKLY REVIEW", "Recite from Al-Fajr to An-Nas", "Fix all mistakes"] },
+      { day: 36, tasks: ["Memorize Al-A'la ayat 1-10", "Review Al-Ghashiyah", "Perfect makharij"] },
+      { day: 37, tasks: ["Complete Al-A'la (ayat 11-19)", "Recite complete 15x", "Review last 3 surahs"] },
+      { day: 38, tasks: ["Memorize At-Tariq (17 ayat)", "Review Al-A'la", "Understand the night star message"] },
+      { day: 39, tasks: ["Memorize Al-Buruj ayat 1-12", "Review At-Tariq", "Reflect on faith stories"] },
+      { day: 40, tasks: ["Complete Al-Buruj (ayat 13-22)", "Connect full surah", "Review week"] },
+      { day: 41, tasks: ["Memorize Al-Inshiqaq ayat 1-13", "Review Al-Buruj", "Day of splitting sky"] },
+      { day: 42, tasks: ["WEEKLY REVIEW", "Complete Juz 30 recitation 2x", "Juz 30 COMPLETE!" ] },
+      { day: 43, tasks: ["Complete Al-Inshiqaq (ayat 14-25)", "Recite full surah", "Begin Juz 29 mindset"] },
+      { day: 44, tasks: ["Memorize Al-Mutaffifin ayat 1-18 (page 1)", "Longer surah - take time", "Repeat 15x"] },
+      { day: 45, tasks: ["Continue Al-Mutaffifin ayat 19-36 (page 2)", "Review first half", "Connect portions"] },
+      { day: 46, tasks: ["Review Al-Mutaffifin + Memorize Al-Infitar ayat 1-10", "Maintain pace", "Don't rush"] },
+      { day: 47, tasks: ["Complete Al-Infitar (ayat 11-19)", "Recite complete", "Review week"] },
+      { day: 48, tasks: ["Memorize At-Takwir ayat 1-15", "Review Al-Infitar", "The folding of the sun"] },
+      { day: 49, tasks: ["WEEKLY REVIEW", "Recite Juz 30 + new Juz 29 portions", "Strengthen weak areas"] },
+      { day: 50, tasks: ["Complete At-Takwir (ayat 16-29)", "Connect full surah", "Review all Juz 29"] },
+      { day: 51, tasks: ["Memorize 'Abasa ayat 1-21 (page 1)", "Prophet's lesson", "Repeat 15x"] },
+      { day: 52, tasks: ["Continue 'Abasa ayat 22-42 (page 2)", "Complete surah", "Review both parts"] },
+      { day: 53, tasks: ["Memorize An-Nazi'at ayat 1-23 (page 1)", "Angels pulling souls", "Take your time"] },
+      { day: 54, tasks: ["Continue An-Nazi'at ayat 24-46 (page 2)", "Moses and Pharaoh story", "Connect smoothly"] },
+      { day: 55, tasks: ["Memorize An-Naba' ayat 1-20 (page 1)", "The Great News", "Repeat 18x"] },
+      { day: 56, tasks: ["WEEKLY REVIEW", "Recite last 2 weeks completely", "Fix pronunciation"] },
+      { day: 57, tasks: ["Continue An-Naba' ayat 21-40 (page 2)", "Complete surah", "Review An-Nazi'at"] },
+      { day: 58, tasks: ["Memorize Al-Mursalat ayat 1-25 (page 1)", "Winds sent forth", "Repeat carefully"] },
+      { day: 59, tasks: ["Continue Al-Mursalat ayat 26-50 (page 2)", "Complete surah", "Review 'Abasa"] },
+      { day: 60, tasks: ["MONTHLY REVIEW", "Recite Juz 30 + Juz 29 portions", "Month 2 complete!"] },
       
-      // Days 1-3: Al-Fatiha + first 3 short surahs
-      days.push({ day: dayCount++, tasks: ["Memorize Al-Fatiha after Fajr (repeat 50x)", "Listen to recitation 10 times", "Recite in all 5 daily prayers"] });
-      days.push({ day: dayCount++, tasks: ["Memorize An-Nas (repeat 30x)", "Review Al-Fatiha 20x", "Link both surahs - recite together 10x"] });
-      days.push({ day: dayCount++, tasks: ["Memorize Al-Falaq + Al-Ikhlas", "Review all memorized (Al-Fatiha, An-Nas, Al-Falaq, Al-Ikhlas)", "Recite to someone for correction"] });
+      // MONTH 3: Juz 29 complete + Start Juz 28 - Days 61-90
+      { day: 61, tasks: ["Memorize Al-Insan ayat 1-15 (page 1)", "Perfect man surah", "New month energy"] },
+      { day: 62, tasks: ["Continue Al-Insan ayat 16-31 (page 2)", "Gardens of paradise", "Connect portions"] },
+      { day: 63, tasks: ["WEEKLY REVIEW", "Recite Al-Mursalat through Al-Insan", "Strengthen new surahs"] },
+      { day: 64, tasks: ["Memorize Al-Qiyamah ayat 1-20 (page 1)", "Resurrection Day", "Reflect deeply"] },
+      { day: 65, tasks: ["Continue Al-Qiyamah ayat 21-40 (page 2)", "Complete surah", "Review Al-Insan"] },
+      { day: 66, tasks: ["Memorize Al-Muddaththir ayat 1-28 (pages 1)", "O you wrapped", "Repeat 15x"] },
+      { day: 67, tasks: ["Continue Al-Muddaththir ayat 29-56 (page 2)", "Complete long surah", "Review yesterday"] },
+      { day: 68, tasks: ["Memorize Al-Muzzammil ayat 1-10 (page 1)", "Night prayer command", "Deep connection"] },
+      { day: 69, tasks: ["Continue Al-Muzzammil ayat 11-20 (page 2)", "Complete surah", "Practice night recitation"] },
+      { day: 70, tasks: ["WEEKLY REVIEW", "Recite last 2 weeks Juz 29 portions", "Almost done Juz 29!"] },
+      { day: 71, tasks: ["Memorize Al-Jinn ayat 1-14 (page 1)", "Jinn listening to Quran", "Unique surah"] },
+      { day: 72, tasks: ["Continue Al-Jinn ayat 15-28 (page 2)", "Complete surah", "Review Al-Muzzammil"] },
+      { day: 73, tasks: ["Memorize Nuh ayat 1-14 (page 1)", "Prophet Noah's story", "Repeat 18x"] },
+      { day: 74, tasks: ["Continue Nuh ayat 15-28 (page 2)", "Complete surah", "Review Al-Jinn"] },
+      { day: 75, tasks: ["Memorize Al-Ma'arij ayat 1-22 (page 1)", "Ways of ascent", "Take time"] },
+      { day: 76, tasks: ["Continue Al-Ma'arij ayat 23-44 (page 2)", "Complete surah", "Review Nuh"] },
+      { day: 77, tasks: ["WEEKLY REVIEW", "JUZ 29 COMPLETE!", "Recite entire Juz 29 from memory"] },
+      { day: 78, tasks: ["Memorize Al-Haqqah ayat 1-26 (page 1)", "The Reality", "Begin with strength"] },
+      { day: 79, tasks: ["Continue Al-Haqqah ayat 27-52 (page 2)", "Complete surah", "Review Ma'arij"] },
+      { day: 80, tasks: ["Memorize Al-Qalam ayat 1-26 (page 1)", "The Pen", "Noon. By the pen."] },
+      { day: 81, tasks: ["Continue Al-Qalam ayat 27-52 (page 2)", "Garden story complete", "Connect portions"] },
+      { day: 82, tasks: ["Memorize Al-Mulk ayat 1-15 (page 1)", "The Sovereignty", "Blessed is He"] },
+      { day: 83, tasks: ["Continue Al-Mulk ayat 16-30 (page 2)", "Complete powerful surah", "Review Al-Qalam"] },
+      { day: 84, tasks: ["WEEKLY REVIEW + START JUZ 28", "Recite Juz 29 + begin Juz 28 portions", "2 Juz complete!"] },
+      { day: 85, tasks: ["Memorize At-Tahrim ayat 1-6 (half page)", "O Prophet, why forbid", "Short but powerful"] },
+      { day: 86, tasks: ["Complete At-Tahrim ayat 7-12", "Examples given", "Review yesterday"] },
+      { day: 87, tasks: ["Memorize At-Talaq ayat 1-6 (page 1)", "Divorce laws", "Understand deeply"] },
+      { day: 88, tasks: ["Complete At-Talaq ayat 7-12", "Recite complete", "Review At-Tahrim"] },
+      { day: 89, tasks: ["Memorize At-Taghabun (18 ayat - page 1)", "Mutual loss and gain", "Repeat carefully"] },
+      { day: 90, tasks: ["MONTHLY REVIEW", "Recite Juz 30 + 29 + new 28 portions", "3 months complete!"] },
       
-      // Days 4-40: Continue Juz 30 systematically
-      for (let i = 3; i < juz30Surahs.length; i++) {
-        const surah = juz30Surahs[i];
-        const isLonger = surah.ayat > 15;
-        
-        if (isLonger) {
-          // Split longer surahs across 2 days
-          days.push({ 
-            day: dayCount++, 
-            tasks: [
-              `Memorize first half of ${surah.name} (${Math.ceil(surah.ayat/2)} ayat) after Fajr`,
-              "Repeat each ayah 20x before moving to next",
-              "Review last 3 surahs memorized (15 min)"
-            ]
-          });
-          days.push({ 
-            day: dayCount++, 
-            tasks: [
-              `Complete ${surah.name} - second half (${Math.floor(surah.ayat/2)} ayat)`,
-              `Connect full surah - recite ${surah.name} completely 10x`,
-              "Daily muraja'a: Review previous week's memorization"
-            ]
-          });
-        } else {
-          days.push({ 
-            day: dayCount++, 
-            tasks: [
-              `Memorize ${surah.name} (${surah.ayat} ayat) after Fajr`,
-              "Listen to recitation, then repeat each ayah 15x",
-              "Review last 5 surahs memorized + recite new surah in salah"
-            ]
-          });
-        }
-        
-        // Weekly comprehensive review every 7 days
-        if (dayCount % 7 === 0) {
-          days.push({ 
-            day: dayCount++, 
-            tasks: [
-              "NO new memorization - full review day",
-              "Recite everything memorized so far from memory 3x",
-              "Fix any mistakes with teacher/app - strengthen weak surahs"
-            ]
-          });
-        }
-      }
+      // MONTH 4-12: Days 91-365 - Continue systematic 1 page per day through remaining Juz
+      { day: 91, tasks: ["Memorize Al-Munafiqun (11 ayat)", "The hypocrites", "Understand their traits"] },
+      { day: 92, tasks: ["Memorize Al-Jumu'ah ayat 1-6", "Friday congregation", "Special importance"] },
+      { day: 93, tasks: ["Complete Al-Jumu'ah ayat 7-11", "Friday prayer complete", "Review yesterday"] },
+      { day: 94, tasks: ["Memorize As-Saff (14 ayat)", "The ranks", "Stand firm together"] },
+      { day: 95, tasks: ["Memorize Al-Mumtahanah ayat 1-7 (page 1)", "She who is tested", "Complex surah"] },
+      { day: 96, tasks: ["Continue Al-Mumtahanah ayat 8-13", "Complete", "Review As-Saff"] },
+      { day: 97, tasks: ["Memorize Al-Hashr ayat 1-12 (page 1)", "The exile", "Banu Nadir story"] },
+      { day: 98, tasks: ["WEEKLY REVIEW", "Recite last 2 weeks portions", "Stay consistent"] },
+      { day: 99, tasks: ["Continue Al-Hashr ayat 13-24 (page 2)", "Beautiful names", "Last 3 ayat profound"] },
+      { day: 100, tasks: ["Memorize Al-Mujadilah ayat 1-11 (page 1)", "She who disputes", "Allah hears all"] },
+      { day: 101, tasks: ["Continue Al-Mujadilah ayat 12-22 (page 2)", "Complete Juz 28!", "Major milestone"] },
       
-      // Days 41-60: Juz 29 (longer surahs, ~5-7 ayat/day with strong revision)
-      const juz29Days = 20;
-      for (let i = 0; i < juz29Days; i++) {
-        days.push({
-          day: dayCount++,
-          tasks: [
-            `Memorize 5-7 ayat from Juz 29 after Fajr (use same mushaf)`,
-            "Repeat new ayat 25x - link with yesterday's portion",
-            "Daily muraja'a: Review 2 pages from Juz 30"
-          ]
-        });
-        
-        if (dayCount % 7 === 0) {
-          days.push({ 
-            day: dayCount++, 
-            tasks: [
-              "Full review day - NO new memorization",
-              "Recite Juz 30 completely from memory",
-              "Review current week of Juz 29 - correct mistakes"
-            ]
-          });
-        }
-      }
+      // Days 102-365: Continue pattern - 1 page per day through Juz 27 → Juz 1
+      // Each Juz is ~20 pages, so roughly 20 days per Juz with reviews
+      // Juz 27: Days 102-122 | Juz 26: Days 123-143 | Juz 25: Days 144-164
+      // Juz 24: Days 165-185 | Juz 23: Days 186-206 | Juz 22: Days 207-227
+      // Juz 21: Days 228-248 | Juz 20: Days 249-269 | Juz 19: Days 270-290
+      // Juz 18-1: Days 291-365
       
-      // Days 61-365: Continue pattern through all 30 Juz (working backwards: 29→28→...→1)
-      // Standard pattern: 5-7 ayat new + strong daily/weekly/monthly review
-      while (dayCount <= 365) {
-        const currentJuz = 30 - Math.floor((dayCount - 61) / 12);
-        
-        if (dayCount % 7 === 0) {
-          // Weekly review day
-          days.push({
-            day: dayCount++,
-            tasks: [
-              "NO new memorization - comprehensive review",
-              "Recite all of last completed Juz from memory",
-              "Identify weak sections and strengthen them"
-            ]
-          });
-        } else if (dayCount % 30 === 0) {
-          // Monthly mega-review
-          days.push({
-            day: dayCount++,
-            tasks: [
-              "MONTHLY MURAJAAH - Review everything memorized",
-              "Recite minimum 3 complete Juz from different sections",
-              "Record yourself and listen for mistakes"
-            ]
-          });
-        } else {
-          // Regular memorization day
-          const weekDay = dayCount % 7;
-          days.push({
-            day: dayCount++,
-            tasks: [
-              `Memorize 5-7 new ayat from Juz ${Math.max(1, currentJuz)} after Fajr`,
-              `Repeat each ayah 20-25x aloud - link with yesterday's ayat`,
-              weekDay < 3 
-                ? "Daily muraja'a: Review last 2 days memorization"
-                : "Daily muraja'a: Review full last week + 1 random Juz from completed"
-            ]
-          });
-        }
-      }
+      { day: 102, tasks: ["Begin Juz 27: Memorize Adh-Dhariyat p1", "Winds that scatter", "Fresh start"] },
+      { day: 103, tasks: ["Continue Adh-Dhariyat p2", "Complete surah", "Review yesterday"] },
+      { day: 104, tasks: ["Memorize At-Tur p1 (ayat 1-24)", "The Mount", "Powerful imagery"] },
+      { day: 105, tasks: ["WEEKLY REVIEW", "Recite Juz 28 + new portions", "Stay strong"] },
+      { day: 106, tasks: ["Continue At-Tur p2 (ayat 25-49)", "Complete", "Review Adh-Dhariyat"] },
+      { day: 107, tasks: ["Memorize An-Najm p1 (ayat 1-31)", "The Star", "Prophet's night journey"] },
+      { day: 108, tasks: ["Continue An-Najm p2 (ayat 32-62)", "Complete", "Powerful ending"] },
+      { day: 109, tasks: ["Memorize Al-Qamar p1 (ayat 1-28)", "The Moon", "Moon split"] },
+      { day: 110, tasks: ["Continue Al-Qamar p2 (ayat 29-55)", "Complete", "Nations destroyed"] },
+      { day: 111, tasks: ["Memorize Ar-Rahman p1 (ayat 1-39)", "The Beneficent", "Most beautiful surah"] },
+      { day: 112, tasks: ["WEEKLY REVIEW", "Recite Juz 27 progress", "Perfect new portions"] },
+      { day: 113, tasks: ["Continue Ar-Rahman p2 (ayat 40-78)", "Complete", "Which favors deny?"] },
+      { day: 114, tasks: ["Memorize Al-Waqi'ah p1 (ayat 1-50)", "The Event", "Day of Judgment"] },
+      { day: 115, tasks: ["Continue Al-Waqi'ah p2 (ayat 51-96)", "Complete", "Three groups"] },
+      { day: 116, tasks: ["Memorize Al-Hadid p1 (ayat 1-15)", "The Iron", "Allah's power"] },
+      { day: 117, tasks: ["Continue Al-Hadid p2 (ayat 16-29)", "Complete Juz 27!", "Review week"] },
+      { day: 118, tasks: ["Begin Juz 26: Memorize Al-Mujadilah remaining portions", "Continue forward", "Never stop"] },
+      { day: 119, tasks: ["WEEKLY REVIEW", "Recite Juz 27 complete", "Strengthen all"] },
+      { day: 120, tasks: ["MONTHLY REVIEW - 4 months!", "Recite 4 complete Juz", "Alhamdulillah"] },
       
-      return days;
-    })()
+      // Days 121-150: Continue through Juz 26-25
+      { day: 121, tasks: ["Memorize Al-Ahqaf p1 (page 503)", "Winding sand tracts", "1 page focus"] },
+      { day: 122, tasks: ["Memorize Al-Ahqaf p2 (page 504)", "Continue", "Review yesterday"] },
+      { day: 123, tasks: ["Memorize Al-Ahqaf p3 (page 505)", "Complete surah", "Connect portions"] },
+      { day: 124, tasks: ["Memorize Muhammad p1 (page 506)", "Prophet's surah", "Battle guidance"] },
+      { day: 125, tasks: ["Memorize Muhammad p2 (page 507)", "Continue", "Paradise description"] },
+      { day: 126, tasks: ["WEEKLY REVIEW", "Recite last 2 weeks", "Fix mistakes"] },
+      { day: 127, tasks: ["Memorize Al-Fath p1 (page 511)", "The Victory", "Hudaybiyyah"] },
+      { day: 128, tasks: ["Memorize Al-Fath p2 (page 512)", "Continue", "Great victory"] },
+      { day: 129, tasks: ["Memorize Al-Fath p3 (page 513)", "Complete", "Review full surah"] },
+      { day: 130, tasks: ["Memorize Al-Hujurat p1 (page 515)", "The rooms", "Manners taught"] },
+      { day: 131, tasks: ["Memorize Al-Hujurat p2 (page 516)", "Complete", "Brotherhood ayah"] },
+      { day: 132, tasks: ["Memorize Qaf p1 (page 518)", "Letter Qaf", "Creation signs"] },
+      { day: 133, tasks: ["WEEKLY REVIEW", "Recite Juz 26 portions", "Almost done"] },
+      { day: 134, tasks: ["Memorize Qaf p2 (page 519)", "Continue", "Recording angels"] },
+      { day: 135, tasks: ["Memorize Qaf p3 (page 520)", "Complete Juz 26!", "6 Juz done"] },
+      { day: 136, tasks: ["Begin Juz 25: Memorize Fussilat p1 (page 477)", "Explained in detail", "New Juz"] },
+      { day: 137, tasks: ["Memorize Fussilat p2 (page 478)", "Continue", "Ad and Thamud"] },
+      { day: 138, tasks: ["Memorize Fussilat p3 (page 479)", "Continue", "6 days creation"] },
+      { day: 139, tasks: ["Memorize Fussilat p4 (page 480)", "Complete", "Angels descend"] },
+      { day: 140, tasks: ["WEEKLY REVIEW", "Recite Juz 25 start", "Maintain pace"] },
+      { day: 141, tasks: ["Memorize Ash-Shura p1 (page 483)", "Consultation", "Revelation described"] },
+      { day: 142, tasks: ["Memorize Ash-Shura p2 (page 484)", "Continue", "Unity message"] },
+      { day: 143, tasks: ["Memorize Ash-Shura p3 (page 485)", "Complete", "Review full"] },
+      { day: 144, tasks: ["Memorize Az-Zukhruf p1 (page 489)", "Gold ornaments", "Worldly life"] },
+      { day: 145, tasks: ["Memorize Az-Zukhruf p2 (page 490)", "Continue", "Ibrahim's story"] },
+      { day: 146, tasks: ["Memorize Az-Zukhruf p3 (page 491)", "Complete", "Pharaoh's fate"] },
+      { day: 147, tasks: ["WEEKLY REVIEW", "Recite week progress", "Stay consistent"] },
+      { day: 148, tasks: ["Memorize Ad-Dukhan p1 (page 496)", "The smoke", "Night of decree"] },
+      { day: 149, tasks: ["Memorize Ad-Dukhan p2 (page 497)", "Complete", "Pharaoh punished"] },
+      { day: 150, tasks: ["MONTHLY REVIEW - 5 months!", "Recite 5 Juz complete", "Halfway energy"] },
+      
+      // Days 151-180: Juz 24-23
+      { day: 151, tasks: ["Memorize Al-Jathiyah p1 (page 499)", "Crouching", "Signs in creation"] },
+      { day: 152, tasks: ["Memorize Al-Jathiyah p2 (page 500)", "Complete Juz 25", "Review yesterday"] },
+      { day: 153, tasks: ["Begin Juz 24: Memorize Az-Zumar p1 (page 458)", "The groups", "Sincere worship"] },
+      { day: 154, tasks: ["Memorize Az-Zumar p2 (page 459)", "Continue", "Ibrahim's creed"] },
+      { day: 155, tasks: ["Memorize Az-Zumar p3 (page 460)", "Continue", "Take your time"] },
+      { day: 156, tasks: ["WEEKLY REVIEW", "Recite Juz 24 start", "Perfect new"] },
+      { day: 157, tasks: ["Memorize Az-Zumar p4 (page 461)", "Continue", "Shaytan's warning"] },
+      { day: 158, tasks: ["Memorize Az-Zumar p5 (page 462)", "Complete long surah", "Review full"] },
+      { day: 159, tasks: ["Memorize Ghafir p1 (page 467)", "The Forgiver", "Believer's plea"] },
+      { day: 160, tasks: ["Memorize Ghafir p2 (page 468)", "Continue", "Pharaoh's magician"] },
+      { day: 161, tasks: ["Memorize Ghafir p3 (page 469)", "Continue", "Strong message"] },
+      { day: 162, tasks: ["Memorize Ghafir p4 (page 470)", "Complete", "Review portions"] },
+      { day: 163, tasks: ["WEEKLY REVIEW", "Recite Juz 24 progress", "Nearly done"] },
+      { day: 164, tasks: ["Review Ghafir + remaining Juz 24", "Complete Juz 24!", "7 Juz complete"] },
+      { day: 165, tasks: ["Begin Juz 23: Memorize Ya-Sin p1 (page 440)", "Heart of Quran", "Special day"] },
+      { day: 166, tasks: ["Memorize Ya-Sin p2 (page 441)", "Continue", "Town's story"] },
+      { day: 167, tasks: ["Memorize Ya-Sin p3 (page 442)", "Continue", "Creation signs"] },
+      { day: 168, tasks: ["Memorize Ya-Sin p4 (page 443)", "Complete", "Review beautiful surah"] },
+      { day: 169, tasks: ["Memorize As-Saffat p1 (page 446)", "Those ranged in ranks", "Angels lined"] },
+      { day: 170, tasks: ["WEEKLY REVIEW", "Recite Juz 23 start", "Ya-Sin perfect"] },
+      { day: 171, tasks: ["Memorize As-Saffat p2 (page 447)", "Continue", "Ibrahim's sacrifice"] },
+      { day: 172, tasks: ["Memorize As-Saffat p3 (page 448)", "Continue", "Stories"] },
+      { day: 173, tasks: ["Memorize As-Saffat p4 (page 449)", "Complete", "Review all"] },
+      { day: 174, tasks: ["Memorize Sad p1 (page 453)", "Letter Sad", "Dawud's trial"] },
+      { day: 175, tasks: ["Memorize Sad p2 (page 454)", "Continue", "Sulayman's story"] },
+      { day: 176, tasks: ["Memorize Sad p3 (page 455)", "Complete", "Iblis's oath"] },
+      { day: 177, tasks: ["WEEKLY REVIEW", "Recite Juz 23 complete", "8 Juz done!"] },
+      { day: 178, tasks: ["Review entire Juz 23", "Strengthen all portions", "Perfect Ya-Sin"] },
+      { day: 179, tasks: ["Begin Juz 22: Memorize Al-Ahzab p1 (page 418)", "The confederates", "Major surah"] },
+      { day: 180, tasks: ["MONTHLY REVIEW - 6 months!", "Recite 6 complete Juz", "Halfway there!"] },
+      
+      // Days 181-210: Juz 22-21
+      { day: 181, tasks: ["Memorize Al-Ahzab p2 (page 419)", "Continue", "Adoption rules"] },
+      { day: 182, tasks: ["Memorize Al-Ahzab p3 (page 420)", "Continue", "Hijab commandment"] },
+      { day: 183, tasks: ["Memorize Al-Ahzab p4 (page 421)", "Continue", "Trench battle"] },
+      { day: 184, tasks: ["WEEKLY REVIEW", "Recite Juz 22 start", "Al-Ahzab progress"] },
+      { day: 185, tasks: ["Memorize Al-Ahzab p5 (page 422)", "Continue", "Complex surah"] },
+      { day: 186, tasks: ["Memorize Al-Ahzab p6 (page 423)", "Complete", "Major completion"] },
+      { day: 187, tasks: ["Memorize Saba p1 (page 428)", "Sheba", "Dawud's gratitude"] },
+      { day: 188, tasks: ["Memorize Saba p2 (page 429)", "Continue", "Queen's kingdom"] },
+      { day: 189, tasks: ["Memorize Saba p3 (page 430)", "Complete", "Review yesterday"] },
+      { day: 190, tasks: ["Memorize Fatir p1 (page 434)", "The Originator", "Angels' wings"] },
+      { day: 191, tasks: ["WEEKLY REVIEW", "Recite Juz 22 progress", "Stay strong"] },
+      { day: 192, tasks: ["Memorize Fatir p2 (page 435)", "Continue", "Creation described"] },
+      { day: 193, tasks: ["Memorize Fatir p3 (page 436)", "Complete Juz 22!", "9 Juz complete"] },
+      { day: 194, tasks: ["Begin Juz 21: Memorize Al-Ankabut p1 (page 396)", "The spider", "Tests described"] },
+      { day: 195, tasks: ["Memorize Al-Ankabut p2 (page 397)", "Continue", "Nuh's story"] },
+      { day: 196, tasks: ["Memorize Al-Ankabut p3 (page 398)", "Continue", "Lot's story"] },
+      { day: 197, tasks: ["Memorize Al-Ankabut p4 (page 399)", "Complete", "Review all"] },
+      { day: 198, tasks: ["WEEKLY REVIEW", "Recite Juz 21 start", "Perfect new"] },
+      { day: 199, tasks: ["Memorize Ar-Rum p1 (page 404)", "The Romans", "Byzantines' victory"] },
+      { day: 200, tasks: ["Memorize Ar-Rum p2 (page 405)", "Continue", "Creation signs"] },
+      { day: 201, tasks: ["Memorize Ar-Rum p3 (page 406)", "Complete", "Review yesterday"] },
+      { day: 202, tasks: ["Memorize Luqman p1 (page 411)", "Luqman", "Wise advice"] },
+      { day: 203, tasks: ["Memorize Luqman p2 (page 412)", "Complete", "Father's counsel"] },
+      { day: 204, tasks: ["Memorize As-Sajdah p1 (page 415)", "Prostration", "32 ayat"] },
+      { day: 205, tasks: ["WEEKLY REVIEW", "Recite Juz 21 progress", "Almost done"] },
+      { day: 206, tasks: ["Complete As-Sajdah + review Juz 21", "Juz 21 complete!", "10 Juz done"] },
+      { day: 207, tasks: ["Begin Juz 20: Memorize An-Naml p1 (page 377)", "The ants", "Sulayman"] },
+      { day: 208, tasks: ["Memorize An-Naml p2 (page 378)", "Continue", "Hoopoe story"] },
+      { day: 209, tasks: ["Memorize An-Naml p3 (page 379)", "Continue", "Queen of Sheba"] },
+      { day: 210, tasks: ["MONTHLY REVIEW - 7 months!", "Recite 7 Juz complete", "Strong finish"] },
+      
+      // Days 211-240: Juz 20-19
+      { day: 211, tasks: ["Memorize An-Naml p4 (page 380)", "Complete", "Powerful ending"] },
+      { day: 212, tasks: ["WEEKLY REVIEW", "Recite Juz 20 start", "Perfect portions"] },
+      { day: 213, tasks: ["Memorize Al-Qasas p1 (page 385)", "The stories", "Musa's birth"] },
+      { day: 214, tasks: ["Memorize Al-Qasas p2 (page 386)", "Continue", "Burning bush"] },
+      { day: 215, tasks: ["Memorize Al-Qasas p3 (page 387)", "Continue", "Qarun's story"] },
+      { day: 216, tasks: ["Memorize Al-Qasas p4 (page 388)", "Continue", "Long surah"] },
+      { day: 217, tasks: ["Memorize Al-Qasas p5 (page 389)", "Complete", "Major milestone"] },
+      { day: 218, tasks: ["Review entire Juz 20", "Juz 20 complete!", "11 Juz done"] },
+      { day: 219, tasks: ["WEEKLY REVIEW", "Recite last 2 weeks", "Strengthen weak"] },
+      { day: 220, tasks: ["Begin Juz 19: Memorize Maryam p1 (page 305)", "Mary", "Beautiful surah"] },
+      { day: 221, tasks: ["Memorize Maryam p2 (page 306)", "Continue", "Isa's birth"] },
+      { day: 222, tasks: ["Memorize Maryam p3 (page 307)", "Continue", "Ibrahim mention"] },
+      { day: 223, tasks: ["Memorize Maryam p4 (page 308)", "Complete", "Review beautiful"] },
+      { day: 224, tasks: ["Memorize Ta-Ha p1 (page 312)", "Ta-Ha", "Musa's calling"] },
+      { day: 225, tasks: ["Memorize Ta-Ha p2 (page 313)", "Continue", "Magicians believe"] },
+      { day: 226, tasks: ["WEEKLY REVIEW", "Recite Juz 19 start", "Stay consistent"] },
+      { day: 227, tasks: ["Memorize Ta-Ha p3 (page 314)", "Continue", "Golden calf"] },
+      { day: 228, tasks: ["Memorize Ta-Ha p4 (page 315)", "Continue", "Adam's story"] },
+      { day: 229, tasks: ["Memorize Ta-Ha p5 (page 316)", "Complete", "Long surah done"] },
+      { day: 230, tasks: ["Memorize Al-Anbiya p1 (page 322)", "The prophets", "Judgment near"] },
+      { day: 231, tasks: ["Memorize Al-Anbiya p2 (page 323)", "Continue", "Many prophets"] },
+      { day: 232, tasks: ["Memorize Al-Anbiya p3 (page 324)", "Continue", "Ibrahim's story"] },
+      { day: 233, tasks: ["WEEKLY REVIEW", "Recite Juz 19 progress", "Perfect new"] },
+      { day: 234, tasks: ["Memorize Al-Anbiya p4 (page 325)", "Continue", "Lot, Nuh"] },
+      { day: 235, tasks: ["Memorize Al-Anbiya p5 (page 326)", "Continue", "Dawud, Sulayman"] },
+      { day: 236, tasks: ["Memorize Al-Anbiya p6 (page 327)", "Continue", "Ayyub, Yunus"] },
+      { day: 237, tasks: ["Memorize Al-Anbiya p7 (page 328)", "Complete", "Many prophets covered"] },
+      { day: 238, tasks: ["Memorize Al-Hajj p1 (page 332)", "The pilgrimage", "Earthquake"] },
+      { day: 239, tasks: ["Memorize Al-Hajj p2 (page 333)", "Continue", "Hajj rites"] },
+      { day: 240, tasks: ["MONTHLY REVIEW - 8 months!", "Recite 8 Juz", "Two-thirds done!"] },
+      
+      // Days 241-270: Juz 18-17
+      { day: 241, tasks: ["Memorize Al-Hajj p3 (page 334)", "Continue", "Permission to fight"] },
+      { day: 242, tasks: ["Memorize Al-Hajj p4 (page 335)", "Complete Juz 19!", "12 Juz complete"] },
+      { day: 243, tasks: ["Begin Juz 18: Memorize Al-Mu'minun p1 (page 342)", "The believers", "Successful believers"] },
+      { day: 244, tasks: ["Memorize Al-Mu'minun p2 (page 343)", "Continue", "Creation stages"] },
+      { day: 245, tasks: ["Memorize Al-Mu'minun p3 (page 344)", "Continue", "Prophets' stories"] },
+      { day: 246, tasks: ["Memorize Al-Mu'minun p4 (page 345)", "Complete", "Review all"] },
+      { day: 247, tasks: ["WEEKLY REVIEW", "Recite Juz 18 start", "Perfect new portions"] },
+      { day: 248, tasks: ["Memorize An-Nur p1 (page 350)", "The light", "Modesty commands"] },
+      { day: 249, tasks: ["Memorize An-Nur p2 (page 351)", "Continue", "Slander punishment"] },
+      { day: 250, tasks: ["Memorize An-Nur p3 (page 352)", "Continue", "Light verse"] },
+      { day: 251, tasks: ["Memorize An-Nur p4 (page 353)", "Complete", "Beautiful surah"] },
+      { day: 252, tasks: ["Memorize Al-Furqan p1 (page 359)", "The criterion", "Musa mentioned"] },
+      { day: 253, tasks: ["Memorize Al-Furqan p2 (page 360)", "Continue", "Idols powerless"] },
+      { day: 254, tasks: ["WEEKLY REVIEW", "Recite Juz 18 progress", "Stay focused"] },
+      { day: 255, tasks: ["Memorize Al-Furqan p3 (page 361)", "Complete Juz 18!", "13 Juz done"] },
+      { day: 256, tasks: ["Begin Juz 17: Memorize Al-Anbiya remaining + Ash-Shu'ara p1", "The poets", "New Juz"] },
+      { day: 257, tasks: ["Memorize Ash-Shu'ara p2 (page 367)", "Continue", "Musa's story long"] },
+      { day: 258, tasks: ["Memorize Ash-Shu'ara p3 (page 368)", "Continue", "Magicians submit"] },
+      { day: 259, tasks: ["Memorize Ash-Shu'ara p4 (page 369)", "Continue", "Ibrahim's story"] },
+      { day: 260, tasks: ["Memorize Ash-Shu'ara p5 (page 370)", "Continue", "Nuh's story"] },
+      { day: 261, tasks: ["WEEKLY REVIEW", "Recite Juz 17 start", "Long surah pace"] },
+      { day: 262, tasks: ["Memorize Ash-Shu'ara p6 (page 371)", "Continue", "Hud, Salih"] },
+      { day: 263, tasks: ["Memorize Ash-Shu'ara p7 (page 372)", "Continue", "Lot, Shu'ayb"] },
+      { day: 264, tasks: ["Memorize Ash-Shu'ara p8 (page 373)", "Complete", "Long surah complete"] },
+      { day: 265, tasks: ["Review entire Juz 17", "Complete Juz 17!", "14 Juz done"] },
+      { day: 266, tasks: ["Begin Juz 16: Memorize Al-Kahf p1 (page 293)", "The cave", "Friday surah"] },
+      { day: 267, tasks: ["Memorize Al-Kahf p2 (page 294)", "Continue", "Cave people"] },
+      { day: 268, tasks: ["WEEKLY REVIEW", "Recite last 2 weeks", "Strengthen all"] },
+      { day: 269, tasks: ["Memorize Al-Kahf p3 (page 295)", "Continue", "Gardens owner"] },
+      { day: 270, tasks: ["MONTHLY REVIEW - 9 months!", "Recite 9 Juz complete", "Final push begins!"] },
+      
+      // Days 271-300: Juz 16-15-14
+      { day: 271, tasks: ["Memorize Al-Kahf p4 (page 296)", "Continue", "Dhul-Qarnayn"] },
+      { day: 272, tasks: ["Memorize Al-Kahf p5 (page 297)", "Continue", "Musa & Khidr"] },
+      { day: 273, tasks: ["Memorize Al-Kahf p6 (page 298)", "Complete", "Beloved surah done"] },
+      { day: 274, tasks: ["Memorize Bani Isra'il p1 (page 282)", "Night journey", "Isra miracle"] },
+      { day: 275, tasks: ["WEEKLY REVIEW", "Recite Juz 16 progress", "Almost done"] },
+      { day: 276, tasks: ["Memorize Bani Isra'il p2 (page 283)", "Continue", "Parents' rights"] },
+      { day: 277, tasks: ["Memorize Bani Isra'il p3 (page 284)", "Continue", "Do not kill"] },
+      { day: 278, tasks: ["Memorize Bani Isra'il p4 (page 285)", "Continue", "Travel commands"] },
+      { day: 279, tasks: ["Memorize Bani Isra'il p5 (page 286)", "Complete Juz 16!", "15 Juz complete"] },
+      { day: 280, tasks: ["Begin Juz 15: Memorize An-Nahl p1 (page 267)", "The bee", "Blessings"] },
+      { day: 281, tasks: ["Memorize An-Nahl p2 (page 268)", "Continue", "Honey verse"] },
+      { day: 282, tasks: ["WEEKLY REVIEW", "Recite Juz 15 start", "Perfect new"] },
+      { day: 283, tasks: ["Memorize An-Nahl p3 (page 269)", "Continue", "Gratitude call"] },
+      { day: 284, tasks: ["Memorize An-Nahl p4 (page 270)", "Continue", "Ibrahim's creed"] },
+      { day: 285, tasks: ["Memorize An-Nahl p5 (page 271)", "Complete", "Blessing surah done"] },
+      { day: 286, tasks: ["Review Juz 15 + prep Juz 14", "Strong review", "Moving fast now"] },
+      { day: 287, tasks: ["Begin Juz 14: Memorize Al-Hijr p1 (page 262)", "Rocky tract", "Protection promise"] },
+      { day: 288, tasks: ["Memorize Al-Hijr p2 (page 263)", "Complete Juz 15!", "16 Juz done"] },
+      { day: 289, tasks: ["WEEKLY REVIEW", "Recite last 2 weeks", "Strong finish coming"] },
+      { day: 290, tasks: ["Memorize Ibrahim p1 (page 255)", "Abraham", "Prophets' prayers"] },
+      { day: 291, tasks: ["Memorize Ibrahim p2 (page 256)", "Complete", "Beautiful duas"] },
+      { day: 292, tasks: ["Memorize Ar-Ra'd p1 (page 249)", "The thunder", "Believers described"] },
+      { day: 293, tasks: ["Memorize Ar-Ra'd p2 (page 250)", "Complete Juz 14!", "17 Juz complete"] },
+      { day: 294, tasks: ["Begin Juz 13: Memorize Yusuf p1 (page 235)", "Joseph", "Best story"] },
+      { day: 295, tasks: ["Memorize Yusuf p2 (page 236)", "Continue", "Dream interpretation"] },
+      { day: 296, tasks: ["WEEKLY REVIEW", "Recite Juz 13 start", "Beautiful Yusuf"] },
+      { day: 297, tasks: ["Memorize Yusuf p3 (page 237)", "Continue", "Aziz's wife"] },
+      { day: 298, tasks: ["Memorize Yusuf p4 (page 238)", "Continue", "Prison years"] },
+      { day: 299, tasks: ["Memorize Yusuf p5 (page 239)", "Continue", "King's dream"] },
+      { day: 300, tasks: ["MONTHLY REVIEW - 10 months!", "Recite 10 Juz", "Almost there!"] },
+      
+      // Days 301-330: Juz 13-12-11
+      { day: 301, tasks: ["Memorize Yusuf p6 (page 240)", "Continue", "Brothers return"] },
+      { day: 302, tasks: ["Memorize Yusuf p7 (page 241)", "Continue", "Binyamin taken"] },
+      { day: 303, tasks: ["WEEKLY REVIEW", "Recite Yusuf portions", "Beautiful story"] },
+      { day: 304, tasks: ["Memorize Yusuf p8 (page 242)", "Complete", "Reunion beautiful"] },
+      { day: 305, tasks: ["Memorize Hud p1 (page 221)", "Hud", "Many prophets"] },
+      { day: 306, tasks: ["Memorize Hud p2 (page 222)", "Continue", "Nuh's ark"] },
+      { day: 307, tasks: ["Memorize Hud p3 (page 223)", "Continue", "Hud's people"] },
+      { day: 308, tasks: ["Memorize Hud p4 (page 224)", "Continue", "Salih's camel"] },
+      { day: 309, tasks: ["Memorize Hud p5 (page 225)", "Continue", "Ibrahim's guests"] },
+      { day: 310, tasks: ["WEEKLY REVIEW", "Recite Juz 12-13 portions", "Stay strong"] },
+      { day: 311, tasks: ["Memorize Hud p6 (page 226)", "Continue", "Lot's story"] },
+      { day: 312, tasks: ["Memorize Hud p7 (page 227)", "Continue", "Shu'ayb's people"] },
+      { day: 313, tasks: ["Memorize Hud p8 (page 228)", "Complete Juz 13!", "18 Juz done"] },
+      { day: 314, tasks: ["Begin Juz 12: Memorize Yunus p1 (page 208)", "Jonah", "Prophet Yunus"] },
+      { day: 315, tasks: ["Memorize Yunus p2 (page 209)", "Continue", "His people believe"] },
+      { day: 316, tasks: ["Memorize Yunus p3 (page 210)", "Continue", "Signs everywhere"] },
+      { day: 317, tasks: ["WEEKLY REVIEW", "Recite Juz 12 start", "Perfect new"] },
+      { day: 318, tasks: ["Memorize Yunus p4 (page 211)", "Continue", "Musa & Pharaoh"] },
+      { day: 319, tasks: ["Memorize Yunus p5 (page 212)", "Complete", "Review all"] },
+      { day: 320, tasks: ["Memorize At-Tawbah ending portions p1", "Repentance", "Final Juz 11"] },
+      { day: 321, tasks: ["Memorize At-Tawbah p2", "Continue", "Tabuk expedition"] },
+      { day: 322, tasks: ["Memorize At-Tawbah p3", "Complete Juz 12!", "19 Juz complete"] },
+      { day: 323, tasks: ["Begin Juz 11: Memorize At-Tawbah remaining p1", "Continue Tawbah", "No Bismillah"] },
+      { day: 324, tasks: ["WEEKLY REVIEW", "Recite last 2 weeks", "Energy rising"] },
+      { day: 325, tasks: ["Memorize At-Tawbah p2", "Continue", "Hypocrites exposed"] },
+      { day: 326, tasks: ["Memorize At-Tawbah p3", "Continue", "Believers praised"] },
+      { day: 327, tasks: ["Memorize At-Tawbah p4", "Continue", "Masjid al-Dirar"] },
+      { day: 328, tasks: ["Memorize At-Tawbah p5", "Complete", "Long surah done"] },
+      { day: 329, tasks: ["Review entire Juz 11", "Juz 11 complete!", "20 Juz done"] },
+      { day: 330, tasks: ["MONTHLY REVIEW - 11 months!", "Recite 11 Juz", "Final month ahead!"] },
+      
+      // Days 331-365: Final Juz 10-1 (FINAL PUSH!)
+      { day: 331, tasks: ["WEEKLY REVIEW", "Recite last month portions", "Final month begins!"] },
+      { day: 332, tasks: ["Begin Juz 10: Memorize Al-Anfal p1 (page 177)", "Spoils of war", "Badr battle"] },
+      { day: 333, tasks: ["Memorize Al-Anfal p2 (page 178)", "Continue", "Victory guidance"] },
+      { day: 334, tasks: ["Memorize Al-Anfal p3 (page 179)", "Complete", "Review yesterday"] },
+      { day: 335, tasks: ["Memorize Al-A'raf p1 (page 151)", "Heights", "Long surah begins"] },
+      { day: 336, tasks: ["Memorize Al-A'raf p2 (page 152)", "Continue", "Adam's story"] },
+      { day: 337, tasks: ["Memorize Al-A'raf p3 (page 153)", "Continue", "Nuh mentioned"] },
+      { day: 338, tasks: ["WEEKLY REVIEW", "Recite Juz 10 progress", "Almost there!"] },
+      { day: 339, tasks: ["Memorize Al-A'raf p4 (page 154)", "Continue", "Hud mentioned"] },
+      { day: 340, tasks: ["Memorize Al-A'raf p5 (page 155)", "Continue", "Many prophets"] },
+      { day: 341, tasks: ["Memorize Al-A'raf p6 (page 156)", "Continue", "Musa's story long"] },
+      { day: 342, tasks: ["Memorize Al-A'raf p7 (page 157)", "Complete Juz 10!", "21 Juz complete"] },
+      { day: 343, tasks: ["Begin Juz 9-8-7-6: Rapid completion mode", "An'am p1 (page 128)", "Sprint to finish!"] },
+      { day: 344, tasks: ["Memorize An'am p2", "Continue", "Cattle surah"] },
+      { day: 345, tasks: ["WEEKLY REVIEW", "Recite all recent", "Final push!"] },
+      { day: 346, tasks: ["Memorize An'am p3", "Complete", "Review"] },
+      { day: 347, tasks: ["Memorize Al-Ma'idah p1 (page 106)", "The table", "Final commandments"] },
+      { day: 348, tasks: ["Memorize Al-Ma'idah p2", "Continue", "Covenants"] },
+      { day: 349, tasks: ["Memorize Al-Ma'idah p3", "Complete Juz 7-6!", "Multiple Juz"] },
+      { day: 350, tasks: ["Memorize An-Nisa p1 (page 77)", "Women", "Rights detailed"] },
+      { day: 351, tasks: ["Memorize An-Nisa p2", "Continue", "Orphans' rights"] },
+      { day: 352, tasks: ["WEEKLY REVIEW", "Recite last 2 weeks", "SO CLOSE!"] },
+      { day: 353, tasks: ["Memorize An-Nisa p3", "Continue", "Inheritance laws"] },
+      { day: 354, tasks: ["Memorize An-Nisa p4", "Complete Juz 5-4!", "Almost done!"] },
+      { day: 355, tasks: ["Memorize Al Imran p1 (page 50)", "Family of Imran", "Second longest"] },
+      { day: 356, tasks: ["Memorize Al Imran p2", "Continue", "Uhud battle"] },
+      { day: 357, tasks: ["Memorize Al Imran p3", "Continue", "Unity call"] },
+      { day: 358, tasks: ["Memorize Al Imran p4", "Complete Juz 3!", "24 Juz done!"] },
+      { day: 359, tasks: ["WEEKLY REVIEW", "Recite all recent Juz", "FINAL WEEK!"] },
+      { day: 360, tasks: ["MONTHLY REVIEW", "Recite 12 complete Juz", "FINAL DAYS!"] },
+      { day: 361, tasks: ["Begin Juz 2-1: Al-Baqarah p1 (page 2)", "The longest surah", "Al-Baqarah begins"] },
+      { day: 362, tasks: ["Memorize Al-Baqarah p2", "Continue", "Faith vs disbelief"] },
+      { day: 363, tasks: ["Memorize Al-Baqarah p3", "Continue", "Bani Israel's tests"] },
+      { day: 364, tasks: ["Memorize Al-Baqarah p4", "Continue", "Qibla change"] },
+      { day: 365, tasks: ["COMPLETE AL-BAQARAH!", "QURAN MEMORIZATION COMPLETE!", "Alhamdulillah - Hafiz achieved!"] }
+    ]
   }
 };
 
@@ -929,7 +1187,7 @@ function StatBar({ label, value, icon, color, onAdd, canAdd }) {
 
 // ─── Level-Up Overlay ─────────────────────────────────────────────────────────
 function LevelUpOverlay({ level, onDismiss }) {
-  useEffect(() => { const t = setTimeout(onDismiss, 3500); return () => clearTimeout(t); }, [level]);
+  useEffect(() => { const t = setTimeout(onDismiss, 3500); return () => clearTimeout(t); }, [onDismiss]);
   return (
     <div onClick={onDismiss} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(2,1,15,0.94)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: "pointer", animation: "overlayFadeIn 0.3s ease" }}>
       <div style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 11, letterSpacing: 6, color: "#3a2a5a", marginBottom: 20, animation: "slideDown 0.4s ease" }}>LEVEL UP</div>
@@ -943,7 +1201,7 @@ function LevelUpOverlay({ level, onDismiss }) {
 // ─── Rank-Up Overlay ──────────────────────────────────────────────────────────
 function RankUpOverlay({ rank, onDismiss }) {
   const RANK_TITLE = { E: "Awakened", D: "Rookie Hunter", C: "Skilled Hunter", B: "Dangerous Hunter", A: "National Level Hunter", S: "Shadow Monarch" };
-  useEffect(() => { const t = setTimeout(onDismiss, 5000); return () => clearTimeout(t); }, [rank]);
+  useEffect(() => { const t = setTimeout(onDismiss, 5000); return () => clearTimeout(t); }, [onDismiss]);
   const col = RANK_COLOR[rank];
   const glow = RANK_GLOW[rank];
   return (
@@ -1100,6 +1358,73 @@ function ProfileTab({ state, dispatch }) {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Roadmap Achievements */}
+      <div style={G.card}>
+        <div style={G.sectionTitle}><span>🏆</span> Roadmap Achievements</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
+          {Object.values(ROADMAPS).map(roadmap => {
+            const progress = state.roadmapProgress?.[roadmap.id] || {};
+            const totalTasks = roadmap.days.reduce((sum, day) => sum + day.tasks.length, 0);
+            const completedTasks = Object.values(progress).reduce((sum, day) => sum + Object.values(day).filter(Boolean).length, 0);
+            const completionPct = Math.round((completedTasks / totalTasks) * 100);
+            const isComplete = completionPct === 100;
+            
+            return (
+              <div key={roadmap.id} style={{ 
+                padding: 14, 
+                borderRadius: 10, 
+                background: isComplete ? `linear-gradient(135deg, ${roadmap.color}15, rgba(10,5,30,0.8))` : "rgba(255,255,255,0.02)", 
+                border: `1px solid ${isComplete ? roadmap.color + "55" : "rgba(60,60,90,0.3)"}`,
+                textAlign: "center",
+                position: "relative",
+                overflow: "hidden"
+              }}>
+                {isComplete && (
+                  <div style={{ 
+                    position: "absolute", 
+                    top: 6, 
+                    right: 6, 
+                    fontSize: 16, 
+                    filter: "drop-shadow(0 0 8px " + roadmap.color + ")"
+                  }}>✓</div>
+                )}
+                <div style={{ fontSize: 32, marginBottom: 6 }}>{roadmap.icon}</div>
+                <div style={{ 
+                  fontFamily: "'Orbitron', sans-serif", 
+                  fontSize: 10, 
+                  color: isComplete ? roadmap.color : "#4a4a70", 
+                  fontWeight: 600,
+                  marginBottom: 4,
+                  letterSpacing: 1
+                }}>{roadmap.title}</div>
+                <div style={{ 
+                  fontFamily: "'Orbitron', sans-serif", 
+                  fontSize: 11, 
+                  color: completionPct > 0 ? "#a78bfa" : "#3a3a5a",
+                  fontWeight: 700
+                }}>{completionPct}%</div>
+                {completionPct > 0 && completionPct < 100 && (
+                  <div style={{ 
+                    marginTop: 6,
+                    height: 3,
+                    background: "rgba(255,255,255,0.05)",
+                    borderRadius: 999,
+                    overflow: "hidden"
+                  }}>
+                    <div style={{ 
+                      height: "100%",
+                      width: completionPct + "%",
+                      background: `linear-gradient(90deg, ${roadmap.color}, ${roadmap.color}88)`,
+                      borderRadius: 999
+                    }} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -1803,14 +2128,11 @@ function StatsTab({ state }) {
   const maxXP = Math.max(...last14.map(d => d.xp), 1);
 
   // Today's activity breakdown
-  const today = new Date().toISOString().split("T")[0];
   const catColors2 = { Physical: "#ff2d55", Mental: "#64d2ff", Discipline: "#ff9500", Skill: "#bf5af2", Health: "#30d158", Social: "#ffd60a" };
   const todayDone = state.quests.filter(q => q.done && q.activityCat);
   const catCounts = {};
   todayDone.forEach(q => { catCounts[q.activityCat] = (catCounts[q.activityCat] || 0) + 1; });
   const catBreakdown = Object.entries(catCounts).sort((a, b) => b[1] - a[1]);
-
-  const RANKS = ["E","D","C","B","A","S"];
 
   return (
     <div style={G.page}>
@@ -2193,7 +2515,6 @@ function ChallengesTab({ state, dispatch }) {
   }
 
   const noTrees = activeTrees.length === 0 && !profile;
-  const hasSomething = activeTrees.length > 0 || profile;
 
   // Count all active/done/failed across everything
   const allActive = [], allDone = [], allFailed = [];
@@ -2291,7 +2612,7 @@ function ChallengesTab({ state, dispatch }) {
 
 // ─── Notification ─────────────────────────────────────────────────────────────
 function Notification({ msg, onClose }) {
-  useEffect(() => { if (msg) { const t = setTimeout(onClose, 4000); return () => clearTimeout(t); } }, [msg]);
+  useEffect(() => { if (msg) { const t = setTimeout(onClose, 4000); return () => clearTimeout(t); } }, [msg, onClose]);
   if (!msg) return null;
   return (
     <div style={{ position: "fixed", bottom: 32, left: "50%", transform: "translateX(-50%)", background: "linear-gradient(135deg, rgba(20,10,50,0.98), rgba(10,5,30,0.98))", border: "1px solid rgba(167,139,250,0.4)", boxShadow: "0 0 40px rgba(167,139,250,0.3), 0 20px 60px rgba(0,0,0,0.8)", borderRadius: 12, padding: "16px 28px", zIndex: 998, fontFamily: "'Orbitron', sans-serif", fontSize: 11, letterSpacing: 2, color: "#a78bfa", animation: "fadeUp 0.3s ease", maxWidth: 440, textAlign: "center", whiteSpace: "pre-line" }}>
@@ -2373,7 +2694,26 @@ function reducer(state, action) {
       const roadmapProg = { ...(state.roadmapProgress || {}) };
       if (!roadmapProg[roadmapId]) roadmapProg[roadmapId] = {};
       if (!roadmapProg[roadmapId][day]) roadmapProg[roadmapId][day] = {};
-      roadmapProg[roadmapId][day][taskIndex] = !roadmapProg[roadmapId][day][taskIndex];
+      
+      const wasChecked = roadmapProg[roadmapId][day][taskIndex];
+      roadmapProg[roadmapId][day][taskIndex] = !wasChecked;
+      
+      // Give XP when checking (not unchecking)
+      if (!wasChecked) {
+        const xpGain = 50; // 50 XP per roadmap task
+        const newExp = state.exp + xpGain;
+        const newLevel = state.level + Math.floor(newExp / 1000);
+        const finalExp = newExp % 1000;
+        
+        return {
+          ...state,
+          roadmapProgress: roadmapProg,
+          exp: finalExp,
+          level: newLevel,
+          _notification: `📚 Roadmap Task Complete: +${xpGain} EXP`
+        };
+      }
+      
       return { ...state, roadmapProgress: roadmapProg };
     }
 
@@ -2764,8 +3104,34 @@ function RoadmapsTab({ state, dispatch }) {
         )}
 
         <div style={G.page}>
-        <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
           <button onClick={() => setSelectedRoadmap(null)} style={{ ...G.btn, fontSize: 9 }}>← Back to Roadmaps</button>
+          <button 
+            onClick={() => {
+              // Find last checked task
+              let lastDay = null;
+              roadmap.days.forEach(day => {
+                const dayProgress = progress[day.day] || {};
+                day.tasks.forEach((_, taskIdx) => {
+                  if (dayProgress[taskIdx]) {
+                    lastDay = day.day;
+                  }
+                });
+              });
+              if (lastDay !== null) {
+                const element = document.querySelector(`[data-day="${lastDay}"]`);
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  // Add flash effect
+                  element.style.boxShadow = `0 0 30px ${roadmap.color}`;
+                  setTimeout(() => { element.style.boxShadow = ''; }, 1500);
+                }
+              }
+            }}
+            style={{ ...G.btn, fontSize: 9, color: roadmap.color, borderColor: `${roadmap.color}66` }}
+          >
+            ⚡ Jump to Last Checked
+          </button>
           {roadmap.isCustom && (
             <button onClick={() => setDeleteConfirm(selectedRoadmap)} style={{ ...G.btn, fontSize: 9, color: "#ff453a", borderColor: "rgba(255,69,58,0.3)" }}>
               Delete Roadmap
@@ -2803,7 +3169,7 @@ function RoadmapsTab({ state, dispatch }) {
             const tasksCompleted = day.tasks.filter((_, taskIdx) => dayProgress[taskIdx]).length;
             
             return (
-              <div key={day.day} style={{ background: dayComplete ? "rgba(48,209,88,0.08)" : "rgba(10,8,30,0.75)", border: `1px solid ${dayComplete ? "rgba(48,209,88,0.25)" : roadmap.color}28`, borderRadius: 12, padding: 20, position: "relative", overflow: "hidden" }}>
+              <div key={day.day} data-day={day.day} style={{ background: dayComplete ? "rgba(48,209,88,0.08)" : "rgba(10,8,30,0.75)", border: `1px solid ${dayComplete ? "rgba(48,209,88,0.25)" : roadmap.color}28`, borderRadius: 12, padding: 20, position: "relative", overflow: "hidden", transition: "box-shadow 0.3s" }}>
                 {dayComplete && <div style={{ position: "absolute", top: 12, right: 12, fontSize: 24, opacity: 0.3 }}>✓</div>}
                 
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
@@ -2948,11 +3314,11 @@ export default function App() {
     dispatch({ type: "CHECK_DEADLINES" });
     const weekStart = getWeekStart();
     if ((state.weeklyResetDate || "") !== weekStart) dispatch({ type: "WEEKLY_RESET", weekStart });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div style={G.app}>
-      {/* Smoke shadow vignette on sides */}
+      {/* Solo Leveling Shadow Army Effect */}
       <div style={{
         position: 'fixed',
         top: 0,
@@ -2961,9 +3327,136 @@ export default function App() {
         bottom: 0,
         pointerEvents: 'none',
         zIndex: 1,
-        background: 'radial-gradient(ellipse at center, transparent 40%, rgba(5,5,15,0.4) 70%, rgba(5,5,15,0.8) 100%)',
-        boxShadow: 'inset 80px 0 120px rgba(5,5,15,0.9), inset -80px 0 120px rgba(5,5,15,0.9)'
-      }} />
+        overflow: 'hidden'
+      }}>
+        {/* Dark purple atmospheric base */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(ellipse at center, transparent 20%, rgba(30,10,50,0.4) 50%, rgba(10,5,25,0.8) 100%)',
+          animation: 'shadowPulse 6s ease-in-out infinite'
+        }} />
+        
+        {/* Shadow silhouettes - left side */}
+        <div style={{
+          position: 'absolute',
+          left: '-5%',
+          top: '10%',
+          width: '25%',
+          height: '80%',
+          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 30%, transparent 70%)',
+          clipPath: 'polygon(0% 20%, 40% 0%, 80% 15%, 100% 40%, 90% 70%, 60% 100%, 20% 90%, 0% 60%)',
+          opacity: 0.6,
+          animation: 'shadowFloat1 15s ease-in-out infinite'
+        }}>
+          {/* Glowing purple eye */}
+          <div style={{
+            position: 'absolute',
+            top: '25%',
+            right: '30%',
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            background: '#a78bfa',
+            boxShadow: '0 0 20px 8px rgba(167,139,250,0.8), 0 0 40px 12px rgba(167,139,250,0.4)',
+            animation: 'eyeGlow 3s ease-in-out infinite'
+          }} />
+        </div>
+
+        {/* Shadow silhouettes - right side */}
+        <div style={{
+          position: 'absolute',
+          right: '-5%',
+          top: '5%',
+          width: '30%',
+          height: '85%',
+          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 30%, transparent 70%)',
+          clipPath: 'polygon(20% 0%, 60% 10%, 100% 25%, 100% 60%, 80% 90%, 40% 100%, 0% 80%, 10% 40%)',
+          opacity: 0.6,
+          animation: 'shadowFloat2 18s ease-in-out infinite reverse'
+        }}>
+          {/* Multiple glowing eyes */}
+          <div style={{
+            position: 'absolute',
+            top: '20%',
+            left: '25%',
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            background: '#c4b5fd',
+            boxShadow: '0 0 15px 6px rgba(196,181,253,0.8), 0 0 30px 10px rgba(196,181,253,0.4)',
+            animation: 'eyeGlow 2.5s ease-in-out infinite 0.5s'
+          }} />
+          <div style={{
+            position: 'absolute',
+            top: '45%',
+            left: '40%',
+            width: 7,
+            height: 7,
+            borderRadius: '50%',
+            background: '#a78bfa',
+            boxShadow: '0 0 18px 7px rgba(167,139,250,0.8), 0 0 35px 11px rgba(167,139,250,0.4)',
+            animation: 'eyeGlow 3.5s ease-in-out infinite 1s'
+          }} />
+        </div>
+
+        {/* Bottom shadow mass */}
+        <div style={{
+          position: 'absolute',
+          bottom: '-10%',
+          left: '10%',
+          right: '10%',
+          height: '40%',
+          background: 'radial-gradient(ellipse at top, rgba(0,0,0,0.8) 0%, rgba(20,10,40,0.6) 30%, transparent 70%)',
+          clipPath: 'polygon(0% 30%, 15% 0%, 35% 20%, 50% 5%, 70% 25%, 85% 10%, 100% 35%, 95% 100%, 5% 100%)',
+          opacity: 0.7,
+          animation: 'shadowFloat3 20s ease-in-out infinite'
+        }}>
+          {/* Ground-level glowing eyes */}
+          <div style={{
+            position: 'absolute',
+            top: '15%',
+            left: '30%',
+            width: 9,
+            height: 9,
+            borderRadius: '50%',
+            background: '#7c3aed',
+            boxShadow: '0 0 25px 10px rgba(124,58,237,0.9), 0 0 50px 15px rgba(124,58,237,0.5)',
+            animation: 'eyeGlow 4s ease-in-out infinite 1.5s'
+          }} />
+          <div style={{
+            position: 'absolute',
+            top: '25%',
+            left: '65%',
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            background: '#a78bfa',
+            boxShadow: '0 0 20px 8px rgba(167,139,250,0.9), 0 0 40px 12px rgba(167,139,250,0.5)',
+            animation: 'eyeGlow 3.2s ease-in-out infinite 0.8s'
+          }} />
+        </div>
+
+        {/* Purple aura wisps */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: `
+            radial-gradient(ellipse at 20% 30%, rgba(167,139,250,0.15) 0%, transparent 40%),
+            radial-gradient(ellipse at 80% 60%, rgba(124,58,237,0.15) 0%, transparent 40%),
+            radial-gradient(ellipse at 50% 80%, rgba(196,181,253,0.1) 0%, transparent 50%)
+          `,
+          animation: 'auraShift 12s ease-in-out infinite'
+        }} />
+
+        {/* Vignette darkening */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          boxShadow: 'inset 0 0 200px 50px rgba(5,5,15,0.8)',
+          animation: 'vignettePulse 8s ease-in-out infinite'
+        }} />
+      </div>
       
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap');
@@ -2980,6 +3473,43 @@ export default function App() {
         @keyframes slideDown  { from { opacity:0; transform:translateY(-14px); } to { opacity:1; transform:translateY(0); } }
         @keyframes statPulse  { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
         @keyframes dangerPulse { 0%,100% { border-color: rgba(255,149,0,0.4); box-shadow: none; } 50% { border-color: rgba(255,149,0,0.8); box-shadow: 0 0 20px rgba(255,149,0,0.2); } }
+        
+        /* Solo Leveling Shadow Army Animations */
+        @keyframes shadowPulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.85; }
+        }
+        @keyframes shadowFloat1 {
+          0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.6; }
+          50% { transform: translateY(-3%) translateX(2%) scale(1.02); opacity: 0.7; }
+        }
+        @keyframes shadowFloat2 {
+          0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.6; }
+          50% { transform: translateY(2%) translateX(-2%) scale(1.03); opacity: 0.7; }
+        }
+        @keyframes shadowFloat3 {
+          0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
+          50% { transform: translateY(-2%) scale(1.01); opacity: 0.8; }
+        }
+        @keyframes eyeGlow {
+          0%, 100% { 
+            opacity: 1; 
+            box-shadow: 0 0 20px 8px rgba(167,139,250,0.8), 0 0 40px 12px rgba(167,139,250,0.4);
+          }
+          50% { 
+            opacity: 0.6; 
+            box-shadow: 0 0 30px 12px rgba(167,139,250,1), 0 0 60px 20px rgba(167,139,250,0.6);
+          }
+        }
+        @keyframes auraShift {
+          0%, 100% { transform: translateY(0); opacity: 1; }
+          33% { transform: translateY(-2%); opacity: 0.8; }
+          66% { transform: translateY(2%); opacity: 0.9; }
+        }
+        @keyframes vignettePulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.9; }
+        }
       `}</style>
 
       {rankUpOverlay  && <RankUpOverlay  rank={rankUpOverlay}   onDismiss={() => setRankUpOverlay(null)} />}
