@@ -1073,6 +1073,7 @@ const defaultState = {
   level: 1, exp: 0, totalExp: 0,
   stats: { strength: 10, agility: 10, intelligence: 10, vitality: 10, perception: 10 },
   statPoints: 0,
+  tutorialCompleted: false, // Show tutorial on first launch
   roadmapProgress: {}, // Format: { roadmapId: { day: { taskIndex: true/false } } }
   customRoadmaps: [], // User-created roadmaps
   skills: [
@@ -1211,6 +1212,225 @@ function RankUpOverlay({ rank, onDismiss }) {
       <div style={{ marginTop: 8, fontFamily: "'Cinzel', serif", fontSize: 26, color: col, letterSpacing: 7, animation: "slideDown 0.5s ease 0.35s both" }}>{RANK_TITLE[rank]}</div>
       <div style={{ marginTop: 32, width: 240, height: 1, background: `linear-gradient(90deg, transparent, ${col}, transparent)`, animation: "slideDown 0.5s ease 0.5s both" }} />
       <div style={{ marginTop: 40, fontFamily: "'Orbitron', sans-serif", fontSize: 9, color: col + "44", letterSpacing: 3 }}>TAP TO CONTINUE</div>
+    </div>
+  );
+}
+
+// ─── Tutorial Overlay ─────────────────────────────────────────────────────────
+function TutorialOverlay({ onComplete }) {
+  const [step, setStep] = useState(0);
+  
+  const steps = [
+    {
+      title: "Welcome, Hunter",
+      icon: "⚔️",
+      desc: "You've entered the Hunter System. This is your life tracker inspired by Solo Leveling.",
+      highlight: "Level up by completing daily quests and building real-world skills."
+    },
+    {
+      title: "Complete Quests",
+      icon: "📋",
+      desc: "Your quests are ranked E through S based on difficulty and effort.",
+      highlight: "Daily quests build your streak. Main/Side quests give massive EXP."
+    },
+    {
+      title: "Level Up & Rank Up",
+      icon: "⬆️",
+      desc: "Gain 1000 EXP to level up. Every level gives you +3 stat points.",
+      highlight: "Reach Level 10/20/35/55/80 to rank up: D → C → B → A → S"
+    },
+    {
+      title: "Unlock Skills",
+      icon: "🎯",
+      desc: "Skills unlock as you level. They track real achievements like running 5km or reading 100 books.",
+      highlight: "Choose 3 skill trees to focus on: Body, Mind, Social, or Life."
+    },
+    {
+      title: "Follow Roadmaps",
+      icon: "🗺️",
+      desc: "365-day roadmaps guide you from zero to mastery in Python, AI, Quran, Fitness, and more.",
+      highlight: "Each task completed gives +50 EXP. Check off tasks daily."
+    },
+    {
+      title: "Daily Discipline",
+      icon: "🔥",
+      desc: "Complete all daily quests to build your streak. Streaks multiply your EXP.",
+      highlight: "7-day streak = 1.25× EXP | 30-day streak = 2.0× EXP"
+    },
+    {
+      title: "The Shadow Army Watches",
+      icon: "👁️",
+      desc: "Those glowing purple eyes in the shadows? They're watching your progress.",
+      highlight: "Now go. Become the Shadow Monarch."
+    }
+  ];
+
+  const currentStep = steps[step];
+  const isLast = step === steps.length - 1;
+
+  return (
+    <div style={{ 
+      position: "fixed", 
+      inset: 0, 
+      zIndex: 2000, 
+      background: "rgba(2,1,15,0.98)", 
+      display: "flex", 
+      flexDirection: "column", 
+      alignItems: "center", 
+      justifyContent: "center", 
+      padding: 24,
+      animation: "overlayFadeIn 0.3s ease"
+    }}>
+      <div style={{ 
+        maxWidth: 600, 
+        background: "linear-gradient(135deg, rgba(30,20,60,0.9), rgba(15,10,40,0.95))", 
+        border: "1px solid rgba(167,139,250,0.3)", 
+        borderRadius: 16, 
+        padding: 48,
+        boxShadow: "0 0 60px rgba(167,139,250,0.2)",
+        animation: "slideDown 0.4s ease"
+      }}>
+        {/* Step indicator */}
+        <div style={{ 
+          textAlign: "center", 
+          fontFamily: "'Orbitron', sans-serif", 
+          fontSize: 9, 
+          letterSpacing: 3, 
+          color: "#5a4a80", 
+          marginBottom: 8 
+        }}>
+          STEP {step + 1} OF {steps.length}
+        </div>
+
+        {/* Progress dots */}
+        <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 32 }}>
+          {steps.map((_, i) => (
+            <div key={i} style={{ 
+              width: i === step ? 24 : 8, 
+              height: 8, 
+              borderRadius: 4, 
+              background: i === step ? "#a78bfa" : "rgba(167,139,250,0.2)",
+              transition: "all 0.3s"
+            }} />
+          ))}
+        </div>
+
+        {/* Icon */}
+        <div style={{ 
+          fontSize: 72, 
+          textAlign: "center", 
+          marginBottom: 24,
+          filter: "drop-shadow(0 0 20px rgba(167,139,250,0.5))"
+        }}>
+          {currentStep.icon}
+        </div>
+
+        {/* Title */}
+        <div style={{ 
+          fontFamily: "'Cinzel', serif", 
+          fontSize: 32, 
+          fontWeight: 700, 
+          color: "#a78bfa", 
+          textAlign: "center", 
+          marginBottom: 16,
+          textShadow: "0 0 30px rgba(167,139,250,0.5)"
+        }}>
+          {currentStep.title}
+        </div>
+
+        {/* Description */}
+        <div style={{ 
+          fontSize: 15, 
+          color: "#cdd6f4", 
+          textAlign: "center", 
+          lineHeight: 1.7,
+          marginBottom: 20
+        }}>
+          {currentStep.desc}
+        </div>
+
+        {/* Highlight */}
+        <div style={{ 
+          background: "rgba(167,139,250,0.1)", 
+          border: "1px solid rgba(167,139,250,0.3)", 
+          borderRadius: 8, 
+          padding: 16,
+          marginBottom: 32
+        }}>
+          <div style={{ 
+            fontSize: 13, 
+            color: "#a78bfa", 
+            textAlign: "center",
+            fontWeight: 500,
+            lineHeight: 1.6
+          }}>
+            💡 {currentStep.highlight}
+          </div>
+        </div>
+
+        {/* Buttons */}
+        <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+          {step > 0 && (
+            <button 
+              onClick={() => setStep(step - 1)}
+              style={{
+                padding: "12px 24px",
+                borderRadius: 8,
+                border: "1px solid rgba(100,80,150,0.4)",
+                background: "rgba(100,80,150,0.1)",
+                color: "#8a7aaa",
+                fontFamily: "'Orbitron', sans-serif",
+                fontSize: 11,
+                letterSpacing: 2,
+                cursor: "pointer",
+                transition: "all 0.2s"
+              }}
+            >
+              ← BACK
+            </button>
+          )}
+          <button 
+            onClick={() => {
+              if (isLast) {
+                onComplete();
+              } else {
+                setStep(step + 1);
+              }
+            }}
+            style={{
+              padding: "12px 32px",
+              borderRadius: 8,
+              border: "1px solid rgba(167,139,250,0.5)",
+              background: "linear-gradient(135deg, rgba(167,139,250,0.15), rgba(124,58,237,0.15))",
+              color: "#a78bfa",
+              fontFamily: "'Orbitron', sans-serif",
+              fontSize: 11,
+              letterSpacing: 2,
+              cursor: "pointer",
+              transition: "all 0.2s",
+              fontWeight: 600,
+              boxShadow: "0 0 20px rgba(167,139,250,0.2)"
+            }}
+          >
+            {isLast ? "BEGIN JOURNEY" : "NEXT →"}
+          </button>
+        </div>
+
+        {/* Skip option */}
+        {!isLast && (
+          <div style={{ 
+            textAlign: "center", 
+            marginTop: 20,
+            fontFamily: "'Orbitron', sans-serif",
+            fontSize: 9,
+            color: "#3a3a5a",
+            letterSpacing: 2,
+            cursor: "pointer"
+          }} onClick={onComplete}>
+            SKIP TUTORIAL
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -2652,6 +2872,9 @@ function reducer(state, action) {
     case "SET_NAME":
       return { ...state, hunter: { ...state.hunter, name: action.name } };
 
+    case "COMPLETE_TUTORIAL":
+      return { ...state, tutorialCompleted: true };
+
     case "ADD_STAT":
       if (state.statPoints <= 0) return state;
       return { ...state, statPoints: state.statPoints - 1, stats: { ...state.stats, [action.stat]: state.stats[action.stat] + 1 } };
@@ -3531,6 +3754,9 @@ export default function App() {
           50% { opacity: 0.9; }
         }
       `}</style>
+
+      {/* Tutorial - highest priority, shows first */}
+      {!state.tutorialCompleted && <TutorialOverlay onComplete={() => dispatch({ type: "COMPLETE_TUTORIAL" })} />}
 
       {rankUpOverlay  && <RankUpOverlay  rank={rankUpOverlay}   onDismiss={() => setRankUpOverlay(null)} />}
       {!rankUpOverlay && levelUpOverlay && <LevelUpOverlay level={levelUpOverlay} onDismiss={() => setLevelUpOverlay(null)} />}
